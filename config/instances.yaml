@@ -63,6 +63,115 @@ containers:
         targetPort: 3000
         tls: true
         tls_termination: Edge
+
+  - name: broker
+    image: confluentinc/cp-kafka:7.0.1
+    ports:
+      - name: broker
+        containerPort: 9092
+        protocol: TCP
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_BROKER_ID: 1
+    # volumeMounts:
+    #   - name: gitea-varlib
+    #     mountPath: /var/lib/gitea/
+    #   - name: gitea-data
+    #     mountPath: /data/
+    #   - name: gitea-etc
+    #     mountPath: /etc/gitea
+    # volumes:
+    #   - name: gitea-data
+    #     emptyDir: {}
+    #   - name: gitea-etc
+    #     emptyDir: {}
+    #   - name: gitea-varlib
+    #     emptyDir: {}
+    # commands: 
+    #     - gitea admin user create --admin --username gitea --password gitea --email dummy@dummy.com --must-change-password=false
+    #     - >
+    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
+    #       -u 'gitea:gitea' 
+    #       -d '{"username": "student", "full_name": "student", "description": "student"}'
+    #       http://localhost:3000/api/v1/orgs
+    #     - >
+    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
+    #       -u 'gitea:gitea'
+    #       -d '{"clone_addr": "https://github.com/ansible-tmm/aap25-roadshow", "repo_name": "aap25-roadshow-content", "owner": "student", "uid": 2, "private": false}'
+    #       http://localhost:3000/api/v1/repos/migrate
+    memory: 4Gi
+    services:
+      - name: broker
+        ports:
+          - port: 9092
+            protocol: TCP
+            targetPort: 9092
+            name: broker
+    routes:
+      - name: broker
+        host: broker
+        service: broker
+        targetPort: 9092
+        tls: true
+        tls_termination: Edge
+
+  - name: zookeeper
+    image: confluentinc/cp-zookeeper:7.0.1
+    ports:
+      - name: zookeeper
+        containerPort: 2181
+        protocol: TCP
+    environment:
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_CLIENT_PORT: 2181
+    # volumeMounts:
+    #   - name: gitea-varlib
+    #     mountPath: /var/lib/gitea/
+    #   - name: gitea-data
+    #     mountPath: /data/
+    #   - name: gitea-etc
+    #     mountPath: /etc/gitea
+    # volumes:
+    #   - name: gitea-data
+    #     emptyDir: {}
+    #   - name: gitea-etc
+    #     emptyDir: {}
+    #   - name: gitea-varlib
+    #     emptyDir: {}
+    # commands: 
+    #     - gitea admin user create --admin --username gitea --password gitea --email dummy@dummy.com --must-change-password=false
+    #     - >
+    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
+    #       -u 'gitea:gitea' 
+    #       -d '{"username": "student", "full_name": "student", "description": "student"}'
+    #       http://localhost:3000/api/v1/orgs
+    #     - >
+    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
+    #       -u 'gitea:gitea'
+    #       -d '{"clone_addr": "https://github.com/ansible-tmm/aap25-roadshow", "repo_name": "aap25-roadshow-content", "owner": "student", "uid": 2, "private": false}'
+    #       http://localhost:3000/api/v1/repos/migrate
+    memory: 4Gi
+    services:
+      - name: broker
+        ports:
+          - port: 9092
+            protocol: TCP
+            targetPort: 9092
+            name: broker
+    routes:
+      - name: broker
+        host: broker
+        service: broker
+        targetPort: 9092
+        tls: true
+        tls_termination: Edge
+
+        
 virtualmachines:
   - name: "control"
     image: "base-zero-aap-2.5-container-ce"
@@ -133,7 +242,8 @@ virtualmachines:
           fH5qke1XR5LFGpndX1GuSVBhdZq94x0aGXWTQCDNIPQ3QtrQ64PBF1vRFdJ6o/FI
           uEOWpQhGYHMC0A==
           -----END CERTIFICATE-----
-  - name: "node01"
+          
+  - name: "node02"
     image: "rhel-9.5"
     memory: "2G"
     cores: 2
@@ -152,7 +262,7 @@ virtualmachines:
         - echo "PasswordAuthentication yes" > /etc/ssh/sshd_config.d/50-cloud-init.conf
         - systemctl reload sshd
 
-  - name: "node02"
+  - name: "podman-host"
     image: "rhel-8.7"
     memory: "2G"
     cores: 2
@@ -184,75 +294,3 @@ virtualmachines:
       runcmd:
         - sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
         - systemctl reload sshd
-        
-  - name: "node03"
-    image: "rhel-9.5"
-    memory: "2G"
-    cores: 2
-    image_size: "30Gi"
-    tags:
-      - key: "AnsibleGroup"
-        value: "isolated"
-    networks:
-      - default
-    services:
-      - name: node03-http
-        ports:
-          - port: 80
-            protocol: TCP
-            targetPort: 80
-            name: node03
-    routes:
-      - name: node03-web
-        host: node03
-        service: node03-http
-        targetPort: 80
-        tls: true
-        tls_termination: Edge
-    userdata: |-
-      #cloud-config
-      user: rhel
-      password: ansible123!
-      chpasswd: { expire: False }
-      runcmd:
-        - echo "PasswordAuthentication yes" > /etc/ssh/sshd_config.d/50-cloud-init.conf
-        - systemctl reload sshd
-
-  - name: "windows"
-    image: "base-zero-windows-2025-3"
-    memory: "16G"
-    cores: 4
-    image_size: "30Gi"
-    tags:
-      - key: "AnsibleGroup"
-        value: "isolated"
-    interface_model: "e1000e"
-    networks:
-      - default
-    services:
-      - name: windows
-        ports:
-          - port: 5986
-            protocol: TCP
-            targetPort: 5986
-            name: windows
-            
-      - name: windows-rdp
-        ports:
-          - port: 3389
-            protocol: TCP
-            targetPort: 3389
-            name: windows-rdp
-      - name: iis
-        ports:
-          - port: 80
-            protocol: TCP
-            targetPort: 80
-            name: iis
-    routes:
-      - name: windows
-        host: windows
-        service: iis
-        targetPort: 80
-        tls: true
-        tls_termination: Edge
