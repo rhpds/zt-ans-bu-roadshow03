@@ -273,16 +273,16 @@ virtualmachines:
     networks:
       - default
     services:
-      - name: node02-http
+      - name: podman-host-http
         ports:
           - port: 80
             protocol: TCP
             targetPort: 80
-            name: node02
+            name: podman-host
     routes:
-      - name: node02-web
-        host: node02
-        service: node02-http
+      - name: podman-host-web
+        host: podman-host
+        service: podman-hosthttp
         targetPort: 80
         tls: true  ## To resolve https/http Framing
         tls_termination: Edge ## To resolve https/http Framing
