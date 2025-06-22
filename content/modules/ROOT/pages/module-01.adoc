@@ -1,10 +1,33 @@
-= Ansible Automation Platform Lab Guide
+= Operational Efficiency with Event-Driven Ansible
 :toc:
 :toc-placement: auto
 
-== Welcome to the Team!
+== Scenario 03: Operational Efficiency
 
-Congratulations on joining the team! This lab will introduce you to automation using Ansible Automation Platform. We'll start with read-only tasks that are safe to automate, helping you build confidence before moving to more complex automation scenarios.
+=== Introduction
+
+Until now, you've focused primarily on technical automation - automating specific technical requirements that greatly benefit your technical teams. To unlock additional value from Ansible automation, you need to explore how it can orchestrate between systems and tools, acting as the organizational "glue" that connects different processes and teams.
+
+This scenario demonstrates how to utilize advanced features of Ansible Automation Platform to reduce mean time to resolution (MTTR), prevent outages, and ultimately provide real business value to your organization through intelligent, event-driven automation.
+
+.Scenario Overview
+image:../assets/scenario3.png[Scenario 3 Overview]
+
+.Operational Challenge
+image:../assets/scenario0301.png[Operational Challenge Details]
+
+=== Prerequisites
+
+[IMPORTANT]
+====
+This lab requires Red Hat account access for Red Hat Insights integration. If you don't have a Red Hat account, please register at https://developers.redhat.com/
+
+.Red Hat Developer Registration
+image::/dev-redhat.png[Red Hat Developer Portal]
+
+.Account Setup Process
+image::/reg-dev.png[Registration Process]
+====
 
 === Lab Environment Setup
 
@@ -12,154 +35,250 @@ Congratulations on joining the team! This lab will introduce you to automation u
 
 [cols="1,1"]
 |===
-| Username | Password
+| Ansible Automation Platform | ServiceNow
 
-| admin
-| ansible123!
+| admin/ansible123!
+| aap-roadshow/Ans1ble123!
 |===
 
+==== Background Context
 
+Your streaming platform has benefited significantly from your automation journey. You can now provision, configure, and maintain infrastructure seamlessly. However, like most organizations, you still experience occasional failures that impact content delivery to customers.
+
+The question is: can you automate responses to everything? Let's find out...
 
 == Lab Exercises
 
-=== Exercise 1: Backing up Linux File Systems
+=== Exercise 1: Simulating Application Failures
 
-Managing backups across multiple Linux servers is a common operational task. Ansible can automate various snapshot mechanisms whether your infrastructure is cloud-based, virtualized, or bare metal.
+==== Understanding the Problem
 
-==== Step 1: Check Current Backup Status
+Last week, your streaming service was disrupted due to a web application failure. It took hours to identify and resolve the issue after the fault occurred. While you hope this doesn't happen again, imagine how much time you could save with the ability to detect and respond to faults as soon as they happen.
 
-. Navigate to the `aap` tab and login using the credentials above (`admin/ansible123!`)
-. Click on the Menu dropdown icon (hamburger menu)
-. Navigate to *Automation Execution* → *Templates*
-. Launch the template *Check RHEL Backups* by clicking the 🚀 icon
+==== Step 1: Verify Application Health
 
-You should see that no backups are currently available.
+. Navigate to the `Web-App` tab
+. Verify that your application is working in the developer environment
+. Feel free to watch the latest episode of *The NC Office*
 
-.Current Backup Status
-image::/backupcheck.png[Backup Check Results]
+This confirms the application is functioning correctly and provides entertainment while you work!
 
-==== Step 2: Create XFS Backups
+==== Step 2: Meet S.E.A.N - The Co-Worker Simulator
 
-Now let's create backups of the XFS file systems on your RHEL servers:
+To simulate issues accurately, you'll use a specialized testing tool called S.E.A.N:
 
-. Navigate back to *Automation Execution* → *Templates*
-. Launch the *Server Backup - XFS/RHEL* template
-. This process will backup your three RHEL nodes using XFS dumps
+* **S**: System Saboteur
+* **E**: Error Magnet  
+* **A**: Antisocial API
+* **N**: Network Nullifier
 
-[NOTE]
+S.E.A.N leverages another powerful feature of Ansible Automation Platform: *The API*
+
+.S.E.A.N Interface
+image::/sean.png[S.E.A.N Co-Worker Simulator]
+
+==== Step 3: Create API Access Token
+
+. Select the hamburger menu icon
+. Navigate to *Access Management* → *Users*
+. Select the admin user
+. Click on the *Tokens* tab
+. Click *Create token*
+
+.Token Creation Location
+image::/where-token.png[AAP Token Creation Interface]
+
+===== Token Configuration:
+
+* *OAuth application:* Leave blank
+* *Description:* `API Access Token`
+* *Scope:* `Write`
+
+. Copy the generated token immediately
+
+[WARNING]
 ====
-This backup process takes approximately 6-7 minutes. Feel free to proceed with other tasks while it runs - Ansible jobs can run in parallel safely!
+Store this token securely as it's required to authenticate S.E.A.N against the Ansible Automation Platform API. You won't be able to view it again after creation.
 ====
 
-.XFS Backup Process
-image::xfsbackup.png[XFS Backup in Progress]
+==== Step 4: Configure S.E.A.N
 
-==== Step 3: Verify Backup Creation
+. Navigate to the `S.E.A.N` tab
+. When prompted for the token, right-click in the terminal and select "Paste"
+. Enter your copied token
 
-Once the backup completes:
+Once authenticated, a menu of simulation options will appear.
 
-. Launch the *Check RHEL Backups* template again
-. Verify that backups are now available on each server
+.S.E.A.N Token Authentication
+image::/token-sean.png[S.E.A.N Token Input]
 
-.Backup Verification
-image::afterbackupcheck.png[Backup Check After Creation]
+==== Step 5: Simulate Application Failure
 
-=== Exercise 2: Windows System Snapshots
+. Select option **1** to simulate web application configuration failure
 
-Windows systems have built-in Volume Shadow Copy Service (VSS) snapshotting capabilities. While your organization may use third-party backup tools, VSS snapshots are essential for database systems as they allow backups without locking active files.
+This will trigger an API call to Ansible Automation Platform, demonstrating how external systems can interact with your automation infrastructure.
 
-==== Step 1: Create VSS Snapshots
+==== Step 6: Monitor Automation Response
 
-. Navigate to *Automation Execution* → *Templates*
-. Launch the *Server Snapshot - VSS/Windows* template
+. Navigate to the `AAP` tab
+. Go to *Automation Execution* → *Jobs*
+. Find the Ansible Job titled `Break Web-Application`
 
-.Windows VSS Snapshot
-image::vss-snap.png[Windows VSS Snapshot Creation]
+.API-Triggered Job Execution
+image::/break-web.png[Break Web Application Job]
 
-==== Step 2: Verify Snapshot Creation
+==== Step 7: Verify Application Failure
 
-. Navigate to *Automation Execution* → *Templates*
-. Execute the *Check Windows Backups* template
+. Once the job completes, navigate to the `Web-App` tab
+. Refresh the page
+. You should see an error message indicating the service is no longer connecting
 
-.VSS Snapshot Verification
-image::vss-snap-check.png[VSS Snapshot Check]
+.Application Failure State
+image::/broken-app.png[Broken Application Display]
 
-Great! The VSS snapshot has been successfully created.
+==== Step 8: Restore Application
 
-==== Step 3: Schedule Automated Snapshots
+. Return to the `S.E.A.N` tab
+. Select option **2** to restore the application configuration
+. Verify the restoration by checking:
+  - Job status in *Automation Execution* → *Jobs*
+  - Application availability in the `Web-App` tab
 
-To automate recurring snapshots without manual intervention:
+=== Exercise 2: Implementing Event-Driven Automation
 
-. Navigate to *Automation Execution* → *Templates*
-. Select *Server Backup - VSS/Windows*
-. Click on the *Schedules* tab
-. Click *Create schedule*
+==== Understanding Event-Driven Ansible
 
-.Schedule Configuration
-image::win-shed.png[Windows Schedule Setup]
+S.E.A.N has demonstrated how to break systems, but now you'll implement proactive automation to prevent future issues, saving time and money while allowing your technical team to rest easy.
 
-===== Schedule Configuration Details:
+==== Step 1: Access Automation Decisions
 
-* *Schedule Name:* `5 Min Snappy`
-* *Description:* `Automated VSS Snaps`
-* *Start date/time:* Leave as default
-* *Time Zone:* Leave as default
+. Navigate to the `aap` tab
+. Select *Automation Decisions*
+. Click on *Rulebook Activations*
 
-===== Frequency Settings:
+Event-Driven Ansible uses rulebooks to listen for specific events on your infrastructure and automatically respond to them.
 
-. Click *Next*
-. Set *Frequency* to `Minutely`
-. Set *Interval* to `5`
-. Select *Save rule* and click *Next*
-. Skip exceptions (click *Next*)
-. Click *Finish*
+.Rulebook Activations Interface
+image::/rules.png[Rulebook Activations]
 
-.Schedule Details
-image::shed-details.png[Schedule Configuration Details]
+==== Step 2: Create Rulebook Activation
 
-Perfect! Your automated snapshot schedule is now configured.
+. Click *Create rulebook activation*
+. Configure with the following details:
 
-== Code Reference
+===== Rulebook Configuration:
 
-=== XFS Backup Automation
+* *Name:* `Web-App Event`
+* *Description:* `Rulebook to listen to configuration issues`
+* *Organization:* `Default`
+* *Project:* `Roadshow`
+* *Rulebook:* `Webapp.yml`
+* *Decision environment:* `Web Server`
+* *Credential:* `AAP`
+* *Restart Policy:* `On failure`
 
-Here's the key Ansible code used for XFS backups:
+. Click *Create rulebook activation*
+. Return to *Rulebook Activations*
+. Wait until the rulebook shows a *Running* state
 
-[source,yaml]
-----
-tasks:
-  - name: Check if xfsdump is installed
-    ansible.builtin.yum:
-      name: xfsdump
-      state: present
-    when: ansible_facts.os_family == "RedHat"
+.Active Rulebook Status
+image::/web-app.png[Web App Rulebook Running]
 
-  - name: Ensure the backup directory exists
-    ansible.builtin.file:
-      path: "{{ backup_file | dirname }}"
-      state: directory
-      mode: '0755'
+==== Step 3: Understanding Event Monitoring
 
-  - name: Perform xfsdump backup
-    ansible.builtin.command:
-      cmd: >
-        xfsdump -l 0 -L {{ backup_label }}
-        -f {{ backup_file }} {{ xfs_mount_point }}
-    register: backup_result
-    ignore_errors: no
+Your Ansible Automation Platform is now listening to events from your application server. Every event generated on this server becomes a source of information for your automation platform.
 
-  - name: Verify xfsdump success
-    ansible.builtin.debug:
-      msg: "Backup completed successfully: {{ backup_result.stdout }}"
-----
+Currently, you're monitoring for httpd service failures, but this could be expanded to watch for any specific events you want to track.
+
+==== Step 4: Test Automated Remediation
+
+. Navigate back to `S.E.A.N`
+. Select option **1** again to break the application
+. Immediately go to the `aap` tab
+. Monitor *Automation Execution* → *Jobs*
+
+You'll observe the following sequence:
+
+1. The *Break Web-Application* template is triggered
+2. Within seconds of completion, the *Restore Web-Application* template automatically starts
+3. The issue is fixed automatically, reducing downtime significantly
+
+==== Step 5: Analyze Automated Response
+
+. Navigate into the *Break Web-Application* job run
+. Examine the job details
+
+You'll see that the httpd service was unable to restart after S.E.A.N made configuration changes. This failure is the trigger that Event-Driven Ansible used to automatically remediate the configuration and restore the service!
+
+== Technical Deep Dive
+
+=== Event-Driven Architecture Benefits
+
+**Proactive Problem Resolution:**
+- Automatic detection of service failures
+- Immediate remediation without human intervention
+- Reduced mean time to resolution (MTTR)
+
+**Business Value:**
+- Decreased downtime and customer impact
+- Reduced operational overhead
+- Improved service reliability and availability
+
+**Scalability:**
+- Monitor multiple services and applications
+- Implement complex remediation workflows
+- Integrate with existing monitoring and alerting systems
+
+=== API-Driven Automation
+
+**External System Integration:**
+- REST API enables third-party tool integration
+- Secure token-based authentication
+- Programmatic job execution and monitoring
+
+**Use Cases:**
+- Incident response automation
+- Integration with monitoring tools
+- Custom application workflows
+- DevOps pipeline integration
+
+== Key Takeaways
+
+You've successfully implemented advanced operational automation:
+
+* ✅ **API Integration**: Used Ansible Automation Platform APIs for external system integration
+* ✅ **Event-Driven Automation**: Implemented rulebooks for automatic incident response
+* ✅ **Proactive Remediation**: Created self-healing infrastructure capabilities
+* ✅ **Reduced MTTR**: Demonstrated automatic problem detection and resolution
+* ✅ **Business Value**: Showed how automation directly impacts operational efficiency
 
 == Next Steps
 
-You've successfully completed the backup automation exercises! You now have:
+With event-driven automation foundations in place, consider these advanced scenarios:
 
-* ✅ Automated Linux XFS backups
-* ✅ Windows VSS snapshots
-* ✅ Scheduled recurring snapshots
-* ✅ Verification procedures for both systems
+**Enhanced Monitoring Integration:**
+- Connect with enterprise monitoring tools (Nagios, Zabbix, New Relic)
+- Implement custom webhook integrations
+- Create complex event correlation rules
 
-This foundation in read-only automation tasks will help you build confidence for more complex automation scenarios in the future.
+**Advanced Remediation Workflows:**
+- Multi-step remediation procedures
+- Escalation paths for failed automation
+- Integration with ticketing systems
+
+**Predictive Analytics:**
+- Implement trend analysis for proactive maintenance
+- Create capacity planning automation
+- Develop performance optimization workflows
+
+**Compliance and Governance:**
+- Automated compliance checking and remediation
+- Audit trail generation for automated actions
+- Risk assessment and approval workflows
+
+**Cross-Platform Event Handling:**
+- Windows event log monitoring
+- Cloud service health checks
+- Network device status monitoring
+
+You've now demonstrated how Ansible Automation Platform transforms reactive IT operations into proactive, intelligent automation that delivers measurable business value through reduced downtime, improved reliability, and enhanced operational efficiency.
