@@ -20,8 +20,8 @@ tabs:
   # - name: gitea
   #   url: https://gitea-${guid}.${domain}/
     external: false
-  - name: Report Server
-    url: https://node03-${guid}.${domain}/index.html
+  - name: Webapp
+    url: https://podman-host-${guid}.${domain}/index.html
     external: false
   - name: Compliance Report
     url: https://node02-${guid}.${domain}/oscap-reports/ospp/
