@@ -72,38 +72,18 @@ containers:
         protocol: TCP
     environment:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092
-      KAFKA_BROKER_ID: 1
-    # volumeMounts:
-    #   - name: gitea-varlib
-    #     mountPath: /var/lib/gitea/
-    #   - name: gitea-data
-    #     mountPath: /data/
-    #   - name: gitea-etc
-    #     mountPath: /etc/gitea
-    # volumes:
-    #   - name: gitea-data
-    #     emptyDir: {}
-    #   - name: gitea-etc
-    #     emptyDir: {}
-    #   - name: gitea-varlib
-    #     emptyDir: {}
-    # commands: 
-    #     - gitea admin user create --admin --username gitea --password gitea --email dummy@dummy.com --must-change-password=false
-    #     - >
-    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
-    #       -u 'gitea:gitea' 
-    #       -d '{"username": "student", "full_name": "student", "description": "student"}'
-    #       http://localhost:3000/api/v1/orgs
-    #     - >
-    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
-    #       -u 'gitea:gitea'
-    #       -d '{"clone_addr": "https://github.com/ansible-tmm/aap25-roadshow", "repo_name": "aap25-roadshow-content", "owner": "student", "uid": 2, "private": false}'
-    #       http://localhost:3000/api/v1/repos/migrate
+      KAFKA_BROKER_ID: "1"
+    volumeMounts:
+       - name: kafka-varlog
+         mountPath: /var/log/kafka/
+    volumes:
+      - name: kafka-varlog
+        emptyDir: {}
     memory: 4Gi
     services:
       - name: broker
@@ -112,13 +92,6 @@ containers:
             protocol: TCP
             targetPort: 9092
             name: broker
-    routes:
-      - name: broker
-        host: broker
-        service: broker
-        targetPort: 9092
-        tls: true
-        tls_termination: Edge
 
   - name: zookeeper
     image: confluentinc/cp-zookeeper:7.0.1
@@ -127,49 +100,23 @@ containers:
         containerPort: 2181
         protocol: TCP
     environment:
-      ZOOKEEPER_TICK_TIME: 2000
-      ZOOKEEPER_CLIENT_PORT: 2181
-    # volumeMounts:
-    #   - name: gitea-varlib
-    #     mountPath: /var/lib/gitea/
-    #   - name: gitea-data
-    #     mountPath: /data/
-    #   - name: gitea-etc
-    #     mountPath: /etc/gitea
-    # volumes:
-    #   - name: gitea-data
-    #     emptyDir: {}
-    #   - name: gitea-etc
-    #     emptyDir: {}
-    #   - name: gitea-varlib
-    #     emptyDir: {}
-    # commands: 
-    #     - gitea admin user create --admin --username gitea --password gitea --email dummy@dummy.com --must-change-password=false
-    #     - >
-    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
-    #       -u 'gitea:gitea' 
-    #       -d '{"username": "student", "full_name": "student", "description": "student"}'
-    #       http://localhost:3000/api/v1/orgs
-    #     - >
-    #       curl -X POST -H "accept: application/json" -H "Content-Type: application/json"
-    #       -u 'gitea:gitea'
-    #       -d '{"clone_addr": "https://github.com/ansible-tmm/aap25-roadshow", "repo_name": "aap25-roadshow-content", "owner": "student", "uid": 2, "private": false}'
-    #       http://localhost:3000/api/v1/repos/migrate
+      ZOOKEEPER_TICK_TIME: "2000"
+      ZOOKEEPER_CLIENT_PORT: "2181"
+    volumeMounts:
+       - name: kafka-varlog
+         mountPath: /var/log/kafka/
+    volumes:
+      - name: kafka-varlog
+        emptyDir: {}
+
     memory: 4Gi
     services:
-      - name: broker
+      - name: zookeeper
         ports:
-          - port: 9092
+          - port: 2181
             protocol: TCP
-            targetPort: 9092
-            name: broker
-    routes:
-      - name: broker
-        host: broker
-        service: broker
-        targetPort: 9092
-        tls: true
-        tls_termination: Edge
+            targetPort: 2181
+            name: zookeeper
 
         
 virtualmachines:
@@ -264,8 +211,8 @@ virtualmachines:
 
   - name: "podman-host"
     image: "rhel-8.7"
-    memory: "2G"
-    cores: 2
+    memory: "4G"
+    cores: 16
     image_size: "30Gi"
     tags:
       - key: "AnsibleGroup"
@@ -282,7 +229,7 @@ virtualmachines:
     routes:
       - name: podman-host-web
         host: podman-host
-        service: podman-hosthttp
+        service: podman-host-http
         targetPort: 80
         tls: true  ## To resolve https/http Framing
         tls_termination: Edge ## To resolve https/http Framing
