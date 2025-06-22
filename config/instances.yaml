@@ -122,16 +122,16 @@ containers:
     environment:
       ZOOKEEPER_TICK_TIME: "2000"
       ZOOKEEPER_CLIENT_PORT: "2181"
-    # volumeMounts:
-    #   - name: gitea-varlib
-    #     mountPath: /var/lib/gitea/
+    volumeMounts:
+       - name: kafka-varlog
+         mountPath: /var/log/kafka/
     #   - name: gitea-data
     #     mountPath: /data/
     #   - name: gitea-etc
     #     mountPath: /etc/gitea
-    # volumes:
-    #   - name: gitea-data
-    #     emptyDir: {}
+    volumes:
+      - name: kafka-varlog
+        emptyDir: {}
     #   - name: gitea-etc
     #     emptyDir: {}
     #   - name: gitea-varlib
