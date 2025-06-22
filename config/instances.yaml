@@ -211,8 +211,8 @@ virtualmachines:
 
   - name: "podman-host"
     image: "rhel-8.7"
-    memory: "2G"
-    cores: 2
+    memory: "4G"
+    cores: 16
     image_size: "30Gi"
     tags:
       - key: "AnsibleGroup"
