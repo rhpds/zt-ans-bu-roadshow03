@@ -1,12 +1,14 @@
-= Infrastructure Data Gathering with Ansible
+= Vulnerability Management with Red Hat Insights and Ansible
 :toc:
 :toc-placement: auto
 
-== Introduction
+== Scenario 03: Operational Efficiency (Continued)
 
-Gathering comprehensive data about your infrastructure is one of the best starting points for automation with Ansible. While you know you have servers and networks, auditing and collecting all system data can be a massive undertaking. Fortunately, Ansible excels at this task and can scale to handle infrastructure of any size.
+=== Introduction
 
-This lab will guide you through using Ansible to collect system information, generate reports, and perform compliance audits across your infrastructure.
+Moving beyond technical automation, you'll now explore how Ansible Automation Platform can orchestrate between systems and tools, acting as organizational "glue" that connects different processes and teams. This advanced scenario demonstrates how to integrate vulnerability and compliance management at scale using Red Hat Insights.
+
+Vulnerability and compliance management can be tedious, especially at enterprise scale. However, by integrating Ansible Automation Platform with Red Hat Insights, you can automate these critical security processes while providing real organizational value through reduced mean time to resolution and proactive threat mitigation.
 
 === Lab Environment Setup
 
@@ -14,240 +16,276 @@ This lab will guide you through using Ansible to collect system information, gen
 
 [cols="1,1"]
 |===
-| Username | Password
+| Ansible Automation Platform | ServiceNow
 
-| admin
-| ansible123!
+| admin/ansible123!
+| aap-roadshow/Ans1ble123!
 |===
-
-
-== Lab Exercises
-
-=== Exercise 1: Gathering Server Information
-
-Let's start by collecting detailed system facts from individual servers using Ansible's built-in capabilities.
-
-==== Step 1: Access the Inventory
-
-. Navigate to your lab `aap` tab and login using the credentials above
-. Navigate to *Automation Execution* → *Infrastructure* → *Inventories*
-. Select the *Video Platform Inventory*
-. Click on the *Hosts* tab
-
-This inventory contains the systems we'll be automating. You should see several hosts already configured for you.
-
-.Node Setup View
-image::node01-setup.png[Node Setup Interface]
-
-==== Step 2: Run Ad-hoc Commands
-
-We'll use Ansible Automation Platform's ad-hoc command feature to gather system facts:
-
-. Select the host `node01`
-. Click on *Run command*
-. From the module dropdown list, select the *Setup* module
-. Click *Next*
-
-.Setup Module Selection
-image::setup.png[Setup Module Interface]
-
-==== Step 3: Configure Execution Environment
-
-. Select the *Default execution environment* from the dropdown
-. Click *Next*
-
-==== Step 4: Choose Credentials
-
-. Select the *Application Nodes* credential
-. Click *Next*
-. Click *Finish* to execute the command
-
-==== Step 5: Review System Facts
-
-Once the command executes, you'll see comprehensive system facts displayed. This includes all the information Ansible can automatically gather from the target system.
-
-.System Facts Output
-image::setup-output.png[Setup Output Results]
 
 [NOTE]
 ====
-The Setup module collects extensive system information including hardware details, network configuration, installed packages, and operating system specifics. This data forms the foundation for infrastructure automation and reporting.
+A Red Hat account is required to access Insights. You can use your existing Red Hat account with active subscriptions, or the Red Hat Developer Account created during the lab prerequisites.
 ====
 
-=== Exercise 2: Generating Infrastructure Reports at Scale
+== Lab Exercises
 
-Now let's leverage Ansible's templating capabilities to create dynamic reports based on collected facts and task results.
+=== Exercise 1: Red Hat Insights Integration and Remediation
 
-==== Understanding Infrastructure Awareness
+==== Step 1: Configure Insights Credentials
 
-Infrastructure awareness is crucial for effective IT operations. Ansible makes this easy by combining fact collection with Jinja templating to generate comprehensive, dynamic reports.
+. Navigate to *Automation Execution* → *Infrastructure* → *Credentials*
+. Locate the pre-configured Insights credential
+. Update the credential with your Red Hat account or Developer account details
 
-==== Step 1: Generate Application Server Report
+.Insights Credential Configuration
+image::/insights-creds.png[Insights Credentials Setup]
+
+==== Step 2: Synchronize Insights Project
+
+. Navigate to *Automation Execution* → *Projects*
+. Locate the *Insights* project
+. Click *Sync* to synchronize with Red Hat Insights
+
+This will clear any failed status and establish the connection to Red Hat Insights services.
+
+.Insights Project Synchronization
+image::/insights-sync.png[Insights Project Sync]
+
+==== Step 3: Register System with Insights
+
+Your RHEL team has provided a template to configure subscription and register the Insights client:
 
 . Navigate to *Automation Execution* → *Templates*
-. Execute the *Application Server Report* template
-. When prompted with options, click *All*
+. Launch the *Insights for RHEL* template
+. When prompted, provide your Red Hat Subscription/Developer account details
 
-This template will collect information from all your application servers and generate a comprehensive report.
+.Insights Login Prompt
+image::/insight-login.png[Insights Login Interface]
 
-==== Step 2: View the Generated Report
+This template will:
+- Register the system with Red Hat subscription services
+- Install and configure the Insights client
+- Perform the initial system scan
+- Upload system data to https://console.redhat.com
 
-. Once the template execution completes, navigate to the *Report Server* tab
-. Refresh the page to see the newly generated report
+==== Step 4: Access Red Hat Insights Console
 
-.Server Report Overview
-image::srv-report.png[Server Report Dashboard]
+. Once the job completes, navigate to the `console.redhat.com` tab
+. Login with your Red Hat account
+. Select the *Insights for RHEL* panel
 
-Notice that the report includes backup information alongside system details, providing a holistic view of your infrastructure status.
+.Red Hat Insights for RHEL Interface
+image::/insights4rhel.png[Insights for RHEL Dashboard]
 
-.Backup Data Integration
-image::backup-data.png[Backup Report Section]
+Red Hat Insights provides comprehensive vulnerability and compliance management, along with many other beneficial services for enterprise infrastructure.
 
-[TIP]
-====
-You can re-run the report template and select different options to create targeted reports for specific criteria or server subsets.
-====
+==== Step 5: Review Security Advisories
 
-=== Exercise 3: Compliance Reporting with OpenSCAP
+. Navigate to *Content* → *Advisories*
+. Review the list of CVEs identified for your registered node
 
-Security compliance is a critical requirement for most organizations. Let's generate a compliance report using OpenSCAP integration.
+.Security Advisories Dashboard
+image::/advisories.png[Security Advisories List]
 
-==== Background: Why Compliance Reports Matter
+Each advisory represents a potential security vulnerability that requires attention and possible remediation.
 
-Information Security teams require regular compliance reports to ensure systems meet organizational and regulatory requirements. Ansible can automate OpenSCAP scans to provide these reports consistently and at scale.
+==== Step 6: Create Remediation Playbook
 
-==== Step 1: Generate Compliance Report
+. Select a CVE advisory (e.g., *RHSA-2024:10274*)
+. Click *Remediate*
 
-Security has specifically requested a compliance report for `Node02`. Let's fulfill this request:
+.Advisory Selection
+image::/rhsa-2024-10274.png[Advisory RHSA-2024-10274]
+
+===== Remediation Configuration:
+
+. Name the remediation playbook: `cve-rhsa-2024-10274`
+. Click *Next*
+. Ensure your node01 is selected in the system review
+
+.System Review Interface
+image::/review.png[Insights System Review]
+
+. Submit the Remediation Review
+
+==== Step 7: Deploy Remediation via Ansible
+
+. Navigate back to the `aap` tab
+. Go to *Automation Execution* → *Projects*
+. Synchronize your Insights project to pull the new remediation playbook
+
+===== Create Remediation Template:
 
 . Navigate to *Automation Execution* → *Templates*
-. Execute the *OpenSCAP Report* template
+. Create a new template with the following details:
 
-==== Step 2: Access Compliance Results
+**Template Configuration:**
+* *Name:* `CVE-2024-1074`
+* *Description:* `Remediation of CVE-2024-1074`
+* *Organization:* `Default`
+* *Project:* `Insights`
+* *Inventory:* `Video Platform Inventory`
+* *Playbook:* `cve-rhsa-2024-10274-******` (use the generated playbook name)
+* *Execution Environment:* `RHEL EE`
+* *Credentials:* `Application Nodes`
 
-. Once the job completes, navigate to the *Compliance Report* tab
-. You'll see the generated compliance report files
+. Save and launch the template
 
-.Compliance Report Directory
-image::compliance_report_folder.png[Compliance Report Folder]
+==== Step 8: Verify Remediation Completion
 
-==== Step 3: Review Detailed Results
+After the job completes successfully and the node reboots:
 
-Click on the report file to view the detailed compliance results, including:
+. Navigate to the `console.redhat.com` tab
+. Select *Automation Toolkit* → *Remediations*
+. Verify your remediation shows as completed
 
-- Security control assessments
-- Pass/fail status for each check
-- Remediation recommendations
-- Risk severity levels
+=== Exercise 2: API-Driven Security Intelligence
 
-.Detailed Compliance Report
-image::compliance_report.png[Compliance Report Details]
+==== Understanding Insights API Integration
+
+Red Hat Insights provides an extensive API that enables you to gather data, build remediation playbooks, and create self-healing infrastructure using Event-Driven Ansible source plugins. You'll use this API to gather comprehensive security data for your security teams.
+
+==== Step 1: Select Target Advisory
+
+. From the `console.redhat.com` tab, navigate to *Content* → *Advisories*
+. Choose an Advisory ID (e.g., *RHSA-2024:9474*)
+
+Make note of the specific advisory ID for the next step.
+
+==== Step 2: Execute CVE Data Collection
+
+. Navigate to *Automation Execution* → *Templates*
+. Launch the *CVE Advisory* template
+. When prompted, provide:
+  - Your Red Hat subscription/Developer account credentials
+  - The Advisory ID you selected
+
+.CVE Advisory Data Collection
+image::/cve-finder.png[CVE Advisory Finder]
+
+This automation will connect to Insights via API and gather comprehensive data about the CVE for your security team, then automatically send this information to your ITSM system.
+
+==== Step 3: Review Security Intelligence in ServiceNow
+
+. Note the incident number from the completed job
+. Navigate to the `servicenow` tab
+. Login with the ServiceNow credentials:
+
+[cols="1,1"]
+|===
+| Username | Password
+
+| aap-roadshow
+| Ans1ble123!
+|===
+
+===== Access Incident Data:
+
+. Click *All* → *Incidents*
+. Select the ticket titled *Advisory CVE Type*
+. Review the comprehensive CVE data gathered via API from Red Hat Insights
+
+.CVE Data in ServiceNow
+image::/cve-data.png[CVE Ticket Data]
+
+Your security teams now have complete, actionable data about the CVE, enabling them to make informed decisions about remediation priorities and strategies.
 
 == Code Reference
 
-=== OpenSCAP Automation Implementation
+=== Insights Registration and Scanning Automation
 
-Here's the key Ansible code used for automated compliance reporting:
+Here's the automation code for registering systems with Red Hat Insights:
 
 [source,yaml]
 ----
 tasks:
-  - name: Check if the system is RHEL 8
-    ansible.builtin.debug:
-      msg: "This playbook is not compatible with {{ inventory_hostname }} (not RHEL 8)"
-    when: ansible_distribution != "RedHat" or ansible_distribution_major_version != "8"
-    failed_when: false
+  - name: Install subscription manager
+    ansible.builtin.package:
+      name: subscription-manager
+      state: present
 
-  - name: Run compliance tasks on RHEL 8 systems only
-    when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "8"
-    block:
-      - name: Get our facts straight
-        ansible.builtin.set_fact:
-          _profile: '{{ compliance_profile | replace("pci_dss", "pci-dss") }}'
-          _report_dir: /tmp/oscap-reports
+  - name: Install insights client
+    ansible.builtin.package:
+      name: insights-client
+      state: present
 
-      - name: Ensure OpenSCAP tools are installed
-        ansible.builtin.dnf:
-          name: '{{ openscap_packages }}'
-          state: present
+  - name: Register RHEL server with subscription manager
+    community.general.redhat_subscription:
+      state: present
+      username: "{{ rhsm_username }}"
+      password: "{{ rhsm_password }}"
+      auto_attach: true
 
-      - name: Configure httpd
-        when: use_httpd | bool
-        block:
-          - name: Install httpd
-            ansible.builtin.dnf:
-              name: httpd
-              state: present
-            notify: Restart httpd
+  - name: Register insights client
+    ansible.builtin.command: insights-client --register
 
-          - name: Override report directory
-            ansible.builtin.set_fact:
-              _report_dir: /var/www/html/oscap-reports
-
-          - name: Gather service facts
-            ansible.builtin.service_facts:
-
-          - name: Enable firewall http service
-            ansible.posix.firewalld:
-              service: http
-              state: enabled
-              immediate: true
-              permanent: true
-            when: "'firewalld.service' in ansible_facts.services"
-
-          - name: Disable httpd welcome page
-            ansible.builtin.file:
-              path: /etc/httpd/conf.d/welcome.conf
-              state: absent
-            notify: Restart httpd
-
-      - name: Create report on Report Server
-        block:
-          - name: Ensure report directory exists
-            ansible.builtin.file:
-              path: '{{ _report_dir }}/{{ _profile }}'
-              state: directory
-              owner: root
-              group: root
-              mode: 0755
-
-          - name: Set report name
-            ansible.builtin.set_fact:
-              _report: '{{ _report_dir }}/{{ _profile }}/report-{{ inventory_hostname }}-{{ ansible_date_time.iso8601 }}.html'
-
-          - name: Generate compliance report
-            ansible.builtin.command: >-
-              oscap xccdf eval --profile {{ _profile }} --report {{ _report }}
-              /usr/share/xml/scap/ssg/content/ssg-rhel{{ ansible_distribution_major_version }}-ds.xml
-            args:
-              creates: '{{ _report }}'
-            register: _oscap
-            failed_when: _oscap.rc not in [0, 2]
-
-          - name: Set report permissions
-            ansible.builtin.file:
-              path: '{{ _report }}'
-              owner: root
-              group: root
-              mode: 0644
+  - name: Perform initial Insights upload
+    ansible.builtin.command: >
+      /bin/insights-client
+    register: __insights_scan
+    changed_when: __insights_scan.rc == 0
 ----
+
+=== Key Components Explained
+
+**Subscription Management:**
+- Automates Red Hat subscription registration
+- Enables automatic entitlement attachment
+- Ensures proper licensing for Insights services
+
+**Insights Client Configuration:**
+- Installs and configures the Insights client
+- Registers systems with Red Hat Insights
+- Performs initial system scanning and data upload
+
+**API Integration:**
+- Leverages Insights APIs for data collection
+- Enables programmatic access to vulnerability data
+- Supports integration with external systems (ITSM, monitoring tools)
+
+== Architecture Benefits
+
+=== Automated Vulnerability Management
+
+**Proactive Security:**
+- Automatic vulnerability discovery and assessment
+- Continuous system monitoring and analysis
+- Integrated remediation playbook generation
+
+**Operational Efficiency:**
+- Reduced manual security assessment overhead
+- Automated data collection and reporting
+- Streamlined remediation workflows
+
+**Business Value:**
+- Improved security posture and compliance
+- Reduced exposure time for vulnerabilities
+- Enhanced audit readiness and documentation
+
+=== Integration Ecosystem
+
+**Red Hat Insights Integration:**
+- Centralized vulnerability and compliance management
+- Enterprise-grade security intelligence
+- Automated remediation recommendations
+
+**ITSM Integration:**
+- Automatic ticket creation with detailed CVE data
+- Seamless workflow integration
+- Comprehensive audit trails
+
+**API-Driven Architecture:**
+- Scalable data collection and processing
+- Flexible integration with existing tools
+- Support for custom security workflows
 
 == Key Takeaways
 
-You've successfully completed the infrastructure data gathering exercises! You now understand how to:
+You've successfully implemented enterprise-grade vulnerability management automation:
 
-* ✅ **Collect System Facts**: Use Ansible's Setup module to gather comprehensive system information
-* ✅ **Generate Dynamic Reports**: Leverage Jinja templating to create infrastructure reports at scale  
-* ✅ **Automate Compliance Audits**: Implement OpenSCAP integration for security compliance reporting
-* ✅ **Scale Data Collection**: Apply these techniques across multiple systems simultaneously
+* ✅ **Insights Integration**: Connected Ansible with Red Hat Insights for automated vulnerability detection
+* ✅ **Automated Remediation**: Created and deployed security patches through integrated workflows
+* ✅ **API-Driven Intelligence**: Leveraged APIs for comprehensive security data collection
+* ✅ **ITSM Integration**: Automated security incident creation with detailed vulnerability data
+* ✅ **Operational Excellence**: Streamlined security operations through intelligent automation
 
-== Next Steps
-
-With these foundational skills in infrastructure data gathering, you're ready to:
-
-- Implement regular automated reporting schedules
-- Expand compliance scanning to additional security frameworks
-- Create custom reports tailored to your organization's specific needs
-- Build more complex automation workflows using the collected system data
-
-This infrastructure awareness foundation will serve as the basis for more advanced automation scenarios throughout your Ansible journey.
