@@ -11,10 +11,10 @@ Until now, you've focused primarily on technical automation - automating specifi
 This scenario demonstrates how to utilize advanced features of Ansible Automation Platform to reduce mean time to resolution (MTTR), prevent outages, and ultimately provide real business value to your organization through intelligent, event-driven automation.
 
 .Scenario Overview
-image:../assets/scenario3.png[Scenario 3 Overview]
+image::/scenario3.png[Scenario 3 Overview]
 
 .Operational Challenge
-image:../assets/scenario0301.png[Operational Challenge Details]
+image::/scenario0301.png[Operational Challenge Details]
 
 === Prerequisites
 
