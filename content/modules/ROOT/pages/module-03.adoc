@@ -1,12 +1,14 @@
-= Windows Patching Report with Ansible
+= Vulnerability Management with Red Hat Insights and Ansible
 :toc:
 :toc-placement: auto
 
-== Introduction
+== Scenario 03: Operational Efficiency (Continued)
 
-Generating patch reports is a critical operational task for maintaining system security and compliance. When you don't have direct access to Windows systems, Ansible becomes an invaluable tool for gathering patch information and delivering actionable reports to your Windows administration teams.
+=== Introduction
 
-This lab demonstrates how to use Ansible to scan Windows systems for required patches and generate comprehensive reports that can be easily shared with stakeholders.
+Moving beyond technical automation, you'll now explore how Ansible Automation Platform can orchestrate between systems and tools, acting as organizational "glue" that connects different processes and teams. This advanced scenario demonstrates how to integrate vulnerability and compliance management at scale using Red Hat Insights.
+
+Vulnerability and compliance management can be tedious, especially at enterprise scale. However, by integrating Ansible Automation Platform with Red Hat Insights, you can automate these critical security processes while providing real organizational value through reduced mean time to resolution and proactive threat mitigation.
 
 === Lab Environment Setup
 
@@ -14,179 +16,275 @@ This lab demonstrates how to use Ansible to scan Windows systems for required pa
 
 [cols="1,1"]
 |===
-| Username | Password
+| Ansible Automation Platform | ServiceNow
 
-| admin
-| ansible123!
+| admin/ansible123!
+| aap-roadshow/Ans1ble123!
 |===
-
-
-
-== Lab Exercise
-
-=== Exercise 1: Creating a Windows Update Report
-
-We'll create a dynamic patch report using Ansible's templating capabilities and publish it as a web page directly on the Windows host for easy access.
-
-==== Step 1: Access the Windows Update Template
-
-. Navigate to *Automation Execution* → *Templates*
-. Select the *Windows Update Report* template
-
-Before launching the template, we need to configure a survey to allow users to specify which type of updates they want to scan for.
-
-.Windows Update Template
-image::update-template.png[Update Template Interface]
-
-==== Step 2: Configure the Survey
-
-. Navigate to the *Survey* tab
-. Create a new survey question with the following details:
-
-===== Survey Configuration:
-
-* *Question:* `Which update category are you wanting to search for?`
-* *Description:* `Windows Update Category`
-* *Answer variable name:* `update_category`
-* *Answer type:* `Multiple Choice (single select)`
-
-===== Multiple Choice Options:
-
-Add each of the following options (click the + button after entering each option):
-
-* Security Updates
-* Critical Updates  
-* Tools
-* Definition Updates
-* Updates
 
 [NOTE]
 ====
-To add each multiple choice option, fill in the field and then click the + button to add it to the list.
+A Red Hat account is required to access Insights. You can use your existing Red Hat account with active subscriptions, or the Red Hat Developer Account created during the lab prerequisites.
 ====
 
-.Survey Configuration
-image::survey.png[Survey Setup Interface]
+== Lab Exercises
 
-==== Step 3: Enable and Save the Survey
+=== Exercise 1: Red Hat Insights Integration and Remediation
 
-. Click *Create survey question* to save your configuration
-. Enable the survey using the toggle at the top of the panel
+==== Step 1: Configure Insights Credentials
 
-.Survey Enablement
-image::survey-enable.png[Survey Enable Toggle]
+. Navigate to *Automation Execution* → *Infrastructure* → *Credentials*
+. Locate the pre-configured Insights credential
+. Update the credential with your Red Hat account or Developer account details
 
-==== Step 4: Execute the Patch Scan
+.Insights Credential Configuration
+image::/insights-creds.png[Insights Credentials Setup]
 
-. Launch the template
-. From the survey dropdown, select *Security Updates*
-. Wait for the template execution to complete
+==== Step 2: Synchronize Insights Project
 
-The Ansible playbook will connect to the Windows server, scan for available security updates, and generate a comprehensive HTML report.
+. Navigate to *Automation Execution* → *Projects*
+. Locate the *Insights* project
+. Click *Sync* to synchronize with Red Hat Insights
 
-==== Step 5: Review the Generated Report
+This will clear any failed status and establish the connection to Red Hat Insights services.
 
-. Once the template completes, navigate to the *Windows Report* tab
-. Review the outstanding updates that are needed for the system
+.Insights Project Synchronization
+image::/insights-sync.png[Insights Project Sync]
 
-The report will display all available security updates, including:
-- Update titles and descriptions
-- Knowledge Base (KB) numbers
-- Installation requirements
-- Download sizes
+==== Step 3: Register System with Insights
 
-.Windows Update Report
-image::update-report.png[Windows Update Report Results]
+Your RHEL team has provided a template to configure subscription and register the Insights client:
 
-[TIP]
-====
-You can re-run the template with different update categories to generate focused reports for specific types of patches (Critical Updates, Definition Updates, etc.).
-====
+. Navigate to *Automation Execution* → *Templates*
+. Launch the *Insights for RHEL* template
+. When prompted, provide your Red Hat Subscription/Developer account details
 
-=== Exercise 2: Verifying Scheduled Tasks
+.Insights Login Prompt
+image::/insight-login.png[Insights Login Interface]
 
-Let's verify that our previously scheduled backup tasks are running correctly.
+This template will:
+- Register the system with Red Hat subscription services
+- Install and configure the Insights client
+- Perform the initial system scan
+- Upload system data to https://console.redhat.com
 
-==== Step 1: Check Scheduled Job Execution
+==== Step 4: Access Red Hat Insights Console
 
-. Navigate to *Automation Execution* → *Jobs*
-. Observe that your *Server Backup - VSS/Windows* jobs that were scheduled earlier have been running automatically
+. Once the job completes, navigate to the `console.redhat.com` tab
+. Login with your Red Hat account
+. Select the *Insights for RHEL* panel
 
-==== Step 2: Verify VSS Snapshots
+.Red Hat Insights for RHEL Interface
+image::/insights4rhel.png[Insights for RHEL Dashboard]
 
-. Execute the *Check Windows Backups* template
-. Confirm that VSS snapshots are being created successfully
+Red Hat Insights provides comprehensive vulnerability and compliance management, along with many other beneficial services for enterprise infrastructure.
 
-.VSS Snapshots Verification
-image::vss-snaps.png[VSS Snapshots Status]
+==== Step 5: Review Security Advisories
 
-This verification confirms that your automated backup strategy is working correctly alongside your new patch reporting capabilities.
+. Navigate to *Content* → *Advisories*
+. Review the list of CVEs identified for your registered node
+
+.Security Advisories Dashboard
+image::/advisories.png[Security Advisories List]
+
+Each advisory represents a potential security vulnerability that requires attention and possible remediation.
+
+==== Step 6: Create Remediation Playbook
+
+. Select a CVE advisory (e.g., *RHSA-2024:10274*)
+. Click *Remediate*
+
+.Advisory Selection
+image::/rhsa-2024-10274.png[Advisory RHSA-2024-10274]
+
+===== Remediation Configuration:
+
+. Name the remediation playbook: `cve-rhsa-2024-10274`
+. Click *Next*
+. Ensure your node01 is selected in the system review
+
+.System Review Interface
+image::/review.png[Insights System Review]
+
+. Submit the Remediation Review
+
+==== Step 7: Deploy Remediation via Ansible
+
+. Navigate back to the `aap` tab
+. Go to *Automation Execution* → *Projects*
+. Synchronize your Insights project to pull the new remediation playbook
+
+===== Create Remediation Template:
+
+. Navigate to *Automation Execution* → *Templates*
+. Create a new template with the following details:
+
+**Template Configuration:**
+* *Name:* `CVE-2024-1074`
+* *Description:* `Remediation of CVE-2024-1074`
+* *Organization:* `Default`
+* *Project:* `Insights`
+* *Inventory:* `Video Platform Inventory`
+* *Playbook:* `cve-rhsa-2024-10274-******` (use the generated playbook name)
+* *Execution Environment:* `RHEL EE`
+* *Credentials:* `Application Nodes`
+
+. Save and launch the template
+
+==== Step 8: Verify Remediation Completion
+
+After the job completes successfully and the node reboots:
+
+. Navigate to the `console.redhat.com` tab
+. Select *Automation Toolkit* → *Remediations*
+. Verify your remediation shows as completed
+
+=== Exercise 2: API-Driven Security Intelligence
+
+==== Understanding Insights API Integration
+
+Red Hat Insights provides an extensive API that enables you to gather data, build remediation playbooks, and create self-healing infrastructure using Event-Driven Ansible source plugins. You'll use this API to gather comprehensive security data for your security teams.
+
+==== Step 1: Select Target Advisory
+
+. From the `console.redhat.com` tab, navigate to *Content* → *Advisories*
+. Choose an Advisory ID (e.g., *RHSA-2024:9474*)
+
+Make note of the specific advisory ID for the next step.
+
+==== Step 2: Execute CVE Data Collection
+
+. Navigate to *Automation Execution* → *Templates*
+. Launch the *CVE Advisory* template
+. When prompted, provide:
+  - Your Red Hat subscription/Developer account credentials
+  - The Advisory ID you selected
+
+.CVE Advisory Data Collection
+image::/cve-finder.png[CVE Advisory Finder]
+
+This automation will connect to Insights via API and gather comprehensive data about the CVE for your security team, then automatically send this information to your ITSM system.
+
+==== Step 3: Review Security Intelligence in ServiceNow
+
+. Note the incident number from the completed job
+. Navigate to the `servicenow` tab
+. Login with the ServiceNow credentials:
+
+[cols="1,1"]
+|===
+| Username | Password
+
+| aap-roadshow
+| Ans1ble123!
+|===
+
+===== Access Incident Data:
+
+. Click *All* → *Incidents*
+. Select the ticket titled *Advisory CVE Type*
+. Review the comprehensive CVE data gathered via API from Red Hat Insights
+
+.CVE Data in ServiceNow
+image::/cve-data.png[CVE Ticket Data]
+
+Your security teams now have complete, actionable data about the CVE, enabling them to make informed decisions about remediation priorities and strategies.
 
 == Code Reference
 
-=== Windows Update Report Implementation
+=== Insights Registration and Scanning Automation
 
-Here's the key Ansible code used for generating Windows patch reports:
+Here's the automation code for registering systems with Red Hat Insights:
 
 [source,yaml]
 ----
 tasks:
-  - name: Create site directory structure
-    ansible.windows.win_file:
-      path: "{{ report_path }}"
-      state: directory
+  - name: Install subscription manager
+    ansible.builtin.package:
+      name: subscription-manager
+      state: present
 
-  - name: Show us the updates
-    debug:
-      msg: "{{ update_category }}"
+  - name: Install insights client
+    ansible.builtin.package:
+      name: insights-client
+      state: present
 
-  - name: Check available updates
-    ansible.windows.win_updates:
-      category_names:
-       - "{{ update_category | default(omit) }}"
-      state: searched
-    register: update_result
+  - name: Register RHEL server with subscription manager
+    community.general.redhat_subscription:
+      state: present
+      username: "{{ rhsm_username }}"
+      password: "{{ rhsm_password }}"
+      auto_attach: true
 
-  - name: Generate HTML report
-    ansible.windows.win_template:
-      src: templates/win_patch_report.html.j2
-      dest: C:\inetpub\wwwroot\index.html
-      force: true
-    notify: restart_iis
-    vars:
-      updates: "{{ update_result.updates }}"
+  - name: Register insights client
+    ansible.builtin.command: insights-client --register
 
-handlers:
-  - name: restart_iis
-    ansible.windows.win_service:
-      name: W3Svc
-      state: restarted
-      start_mode: auto
+  - name: Perform initial Insights upload
+    ansible.builtin.command: >
+      /bin/insights-client
+    register: __insights_scan
+    changed_when: __insights_scan.rc == 0
 ----
 
 === Key Components Explained
 
-**Update Scanning:**
-- Uses `ansible.windows.win_updates` module in search mode
-- Filters by specified update categories
-- Registers results for report generation
+**Subscription Management:**
+- Automates Red Hat subscription registration
+- Enables automatic entitlement attachment
+- Ensures proper licensing for Insights services
 
-**Report Generation:**
-- Leverages Jinja2 templating for dynamic HTML creation
-- Publishes reports directly to IIS web server
-- Provides accessible, shareable format for stakeholders
+**Insights Client Configuration:**
+- Installs and configures the Insights client
+- Registers systems with Red Hat Insights
+- Performs initial system scanning and data upload
 
-**Service Management:**
-- Automatically restarts IIS after report publication
-- Ensures web service availability for report access
+**API Integration:**
+- Leverages Insights APIs for data collection
+- Enables programmatic access to vulnerability data
+- Supports integration with external systems (ITSM, monitoring tools)
+
+== Architecture Benefits
+
+=== Automated Vulnerability Management
+
+**Proactive Security:**
+- Automatic vulnerability discovery and assessment
+- Continuous system monitoring and analysis
+- Integrated remediation playbook generation
+
+**Operational Efficiency:**
+- Reduced manual security assessment overhead
+- Automated data collection and reporting
+- Streamlined remediation workflows
+
+**Business Value:**
+- Improved security posture and compliance
+- Reduced exposure time for vulnerabilities
+- Enhanced audit readiness and documentation
+
+=== Integration Ecosystem
+
+**Red Hat Insights Integration:**
+- Centralized vulnerability and compliance management
+- Enterprise-grade security intelligence
+- Automated remediation recommendations
+
+**ITSM Integration:**
+- Automatic ticket creation with detailed CVE data
+- Seamless workflow integration
+- Comprehensive audit trails
+
+**API-Driven Architecture:**
+- Scalable data collection and processing
+- Flexible integration with existing tools
+- Support for custom security workflows
 
 == Key Takeaways
 
-Congratulations! You've successfully automated multiple critical IT operations tasks:
+You've successfully implemented enterprise-grade vulnerability management automation:
 
-* ✅ **Automated Backup Operations**: Implemented XFS backups for Linux and VSS snapshots for Windows
-* ✅ **Infrastructure Data Collection**: Gathered comprehensive system facts and generated dynamic reports
-* ✅ **Security Compliance**: Automated OpenSCAP compliance scanning and reporting
-* ✅ **Patch Management**: Created dynamic Windows update reports with configurable survey options
-* ✅ **Scheduled Automation**: Configured recurring tasks that run without manual intervention
-
+* ✅ **Insights Integration**: Connected Ansible with Red Hat Insights for automated vulnerability detection
+* ✅ **Automated Remediation**: Created and deployed security patches through integrated workflows
+* ✅ **API-Driven Intelligence**: Leveraged APIs for comprehensive security data collection
+* ✅ **ITSM Integration**: Automated security incident creation with detailed vulnerability data
+* ✅ **Operational Excellence**: Streamlined security operations through intelligent automation
