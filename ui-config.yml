@@ -17,28 +17,15 @@ antora:
 tabs:
   - name: aap
     url: https://control-${guid}.${domain}/
-  # - name: gitea
-  #   url: https://gitea-${guid}.${domain}/
     external: false
+  - name: ">_ control"
+    url: /wetty
   - name: Webapp
     url: https://podman-host-${guid}.${domain}/index.html
     external: false
-  - name: Compliance Report
-    url: https://node02-${guid}.${domain}/oscap-reports/ospp/
-    external: false
-  # - name: Windows RDP
-  #   url: https://windows-ironrdp-${guid}.${domain}/
-  #   external: false
-  - name: Windows UI
-    url: https://windows-${guid}.${domain}/
-    external: false
-  # - name: ">_ control"
-  #   url: /wetty
-  # - name: ">_ node01"
-  #   url: /wetty_node01
-  # - name: ">_ node02"
-  #   url: /wetty_node02
-  # - name: ">_ node03"
-  #   url: /wetty_node03
-  # - name: Cloud (PoC)
-  #   url: /cloud
+  - name: ServiceNow
+    url: https://ansible.service-now.com
+    external: true
+  - name: Red Hat Insights
+    url: https://console.redhat.com
+    external: true
