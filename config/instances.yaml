@@ -229,7 +229,7 @@ virtualmachines:
     routes:
       - name: podman-host-web
         host: podman-host
-        service: podman-hosthttp
+        service: podman-host-http
         targetPort: 80
         tls: true  ## To resolve https/http Framing
         tls_termination: Edge ## To resolve https/http Framing
