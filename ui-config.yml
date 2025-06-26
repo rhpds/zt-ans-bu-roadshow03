@@ -18,8 +18,8 @@ tabs:
   - name: aap
     url: https://control-${guid}.${domain}/
     external: false
-  - name: ">_ control"
-    url: /wetty
+  - name: ">_ S.E.A.N"
+    url: /wetty_sean
   - name: Webapp
     url: https://podman-host-${guid}.${domain}/index.html
     external: false
