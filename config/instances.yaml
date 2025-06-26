@@ -129,7 +129,7 @@ virtualmachines:
    # bootloader: "efi"
     terminal:
       - name: wetty_sean
-        command: sh /home/rhel/roadshow/lab-resources/hackbot.sh
+        command: /home/rhel/roadshow/lab-resources/hackbot.sh
     tags:
       - key: "AnsibleGroup"
         value: "isolated"
