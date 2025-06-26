@@ -127,6 +127,9 @@ virtualmachines:
     image_size: "30Gi"
    # disk_type: "scsi"
    # bootloader: "efi"
+    terminal:
+      - name: wetty_sean
+        command: sh /home/rhel/roadshow/lab-resources/hackbot.sh
     tags:
       - key: "AnsibleGroup"
         value: "isolated"
