@@ -127,7 +127,7 @@ virtualmachines:
     image_size: "30Gi"
    # disk_type: "scsi"
    # bootloader: "efi"
-    terminal:
+    terminals:
       - name: wetty_sean
         command: /home/rhel/roadshow/lab-resources/hackbot.sh
     tags:
