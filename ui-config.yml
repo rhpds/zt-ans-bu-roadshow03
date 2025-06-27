@@ -24,7 +24,7 @@ tabs:
     url: /wetty_sean
   - name: Webapp
     url: https://podman-host-${guid}.${domain}/index.html
-    external: false
+    external: true
   - name: ServiceNow
     url: https://ansible.service-now.com
     external: true
