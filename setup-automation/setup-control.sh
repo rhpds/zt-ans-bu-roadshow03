@@ -820,6 +820,7 @@ sleep 20
 
 git clone https://github.com/nmartins0611/aap25-roadshow-content.git /home/rhel/roadshow
 
+chmod -R 777 /home/rhel/roadshow
 chmod +x /home/rhel/roadshow/lab-resources/hackbot.sh
 sudo chown rhel:rhel /home/rhel/roadshow/lab-resources/hackbot.sh
 
