@@ -787,7 +787,7 @@ tee /tmp/setup.yml << EOF
     ansible.eda.project:
       name: "Roadshow"
       description: "Roadshow Rulebooks"
-      url: https://github.com/nmartins0611/aap25-roadshow-content.git
+      url: https://github.com/ansible-tmm/aap25-roadshow.git
       organization_name: Default
       state: present
       controller_host: https://localhost
