@@ -18,6 +18,12 @@ ingress:
     port: 2181
   - protocol: TCP
     port: 9092
+  - protocol: TCP
+    port: 2001
+  - protocol: TCP
+    port: 2002
+  - protocol: TCP
+    port: 2003
 egress:
 - ports:
   - protocol: TCP
@@ -36,3 +42,9 @@ egress:
     port: 2181
   - protocol: TCP
     port: 9092
+  - protocol: TCP
+    port: 2001
+  - protocol: TCP
+    port: 2002
+  - protocol: TCP
+    port: 2003
