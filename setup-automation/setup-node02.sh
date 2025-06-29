@@ -7,4 +7,7 @@ subscription-manager register --org=${SATELLITE_ORG} --activationkey=${SATELLITE
 
 yum install nano subscription-manager kbd insights-client  -y
 
+subscription-manager unregister
+
 setenforce 0
+
