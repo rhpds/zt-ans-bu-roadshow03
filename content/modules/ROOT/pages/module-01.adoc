@@ -1,21 +1,6 @@
 # Operational Efficiency with Event-Driven Ansible
 *Lab Guide - Scenario 03*
 
----
-
-## Table of Contents
-
-1. [Overview](#overview)
-2. [Prerequisites](#prerequisites)
-3. [Lab Environment Setup](#lab-environment-setup)
-4. [Exercise 1: Simulating Application Failures](#exercise-1-simulating-application-failures)
-5. [Exercise 2: Implementing Event-Driven Automation](#exercise-2-implementing-event-driven-automation)
-6. [Technical Deep Dive](#technical-deep-dive)
-7. [Code Reference](#code-reference)
-8. [Next Steps](#next-steps)
-
----
-
 ## Overview
 
 ### Scenario 03: Operational Efficiency
@@ -23,12 +8,6 @@
 Until now, you've focused primarily on technical automation - automating specific technical requirements that greatly benefit your technical teams. To unlock additional value from **Ansible Automation Platform**, you need to explore how it can orchestrate between systems and tools, acting as the organizational "glue" that connects different processes and teams.
 
 This scenario demonstrates how to utilize advanced features of **Ansible Automation Platform** to reduce mean time to resolution (MTTR), prevent outages, and ultimately provide real business value to your organization through intelligent, event-driven automation.
-
-[role="border"]
-image::scenario3.png[Scenario 3 Overview]
-
-[role="border"]
-image::scenario0301.png[Operational Challenge Details]
 
 ### Learning Objectives
 
