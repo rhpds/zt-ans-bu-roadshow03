@@ -8,9 +8,6 @@ Delivering video across the globe can be a complicated task! While we can use **
 
 However, it's not always the best approach to remediate issues on a network without getting the full picture of what is taking place. In the previous example we were able to fix a common configuration issue on our Web App, but for the network we would take a different approach.
 
-[role="border"]
-image::scenario0303.png[Network Scenario Overview]
-
 ### Learning Objectives
 
 By the end of this lab, you will be able to:
