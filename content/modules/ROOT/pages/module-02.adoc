@@ -2,7 +2,6 @@
 
 # 🛡️ Vulnerability Management with Red Hat Insights and Ansible
 
-## 🎯 Scenario 03: Operational Efficiency (Continued)
 
 ### Introduction
 
