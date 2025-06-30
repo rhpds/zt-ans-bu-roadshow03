@@ -1,6 +1,5 @@
 :notoc:
-:toc:
-:toc-placement: auto
+
 
 # ⚡ Operational Efficiency with Event-Driven Ansible
 
