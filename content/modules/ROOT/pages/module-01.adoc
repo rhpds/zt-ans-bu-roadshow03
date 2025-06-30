@@ -290,41 +290,7 @@ Currently, you're monitoring for httpd service failures, but this could be expan
 **Key Insight:** You'll see that the httpd service was unable to restart after S.E.A.N made configuration changes. This failure is the trigger that Event-Driven Ansible used to automatically remediate the configuration and restore the service!
 ====
 
----
 
-## Technical Deep Dive
-
-### Event-Driven Architecture Benefits
-
-#### Proactive Problem Resolution
-* **Automatic detection** of service failures
-* **Immediate remediation** without human intervention
-* **Reduced mean time to resolution** (MTTR)
-
-#### Business Value
-* **Decreased downtime** and customer impact
-* **Reduced operational overhead**
-* **Improved service reliability** and availability
-
-#### Scalability
-* **Monitor multiple services** and applications
-* **Implement complex remediation workflows**
-* **Integrate with existing monitoring** and alerting systems
-
-### API-Driven Automation
-
-#### External System Integration
-* **REST API enables** third-party tool integration
-* **Secure token-based authentication**
-* **Programmatic job execution** and monitoring
-
-#### Use Cases
-* **Incident response automation**
-* **Integration with monitoring tools**
-* **Custom application workflows**
-* **DevOps pipeline integration**
-
----
 
 ## Code Reference
 
