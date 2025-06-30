@@ -1,127 +1,185 @@
-:notoc:
+# Network Automation with Event-Driven Ansible
+*Lab Guide - Advanced Network Operations*
 
-# 🌐 Oh No, What's Next - The Network?
+---
 
+## Table of Contents
 
-### Introduction
+1. [Introduction](#introduction)
+2. [Events to Action](#events-to-action)
+3. [Network Troubleshooting Results](#network-troubleshooting-results)
+4. [Efficiency Beyond Remediation](#efficiency-beyond-remediation)
+5. [Code Reference](#code-reference)
+6. [Lab Summary](#lab-summary)
+7. [Next Steps](#next-steps)
+
+---
+
+## Introduction
 
 Delivering video across the globe can be a complicated task! While we can use **Insights** and **Ansible** for CVE management, we can also experience network problems beyond these issues.
 
 However, it's not always the best approach to remediate issues on a network without getting the full picture of what is taking place. In the previous example we were able to fix a common configuration issue on our Web App, but for the network we would take a different approach.
 
-![scenario303](../assets/scenario0303.png)
+[role="border"]
+image::scenario0303.png[Network Scenario Overview]
+
+### Learning Objectives
+
+By the end of this lab, you will be able to:
+
+* **Configure Event-Driven Ansible** for network telemetry monitoring
+* **Implement automated network troubleshooting** workflows
+* **Integrate network automation** with ITSM systems
+* **Automate network configuration** for new system deployments
 
 ---
 
-## 🎯 Events to Action!
+## Events to Action
 
 Our Network engineers have put together a few playbooks to assist us in troubleshooting outages. The most important part of this is that it provides a consistent way to troubleshoot the network and allows us to fact-gather what is important for them to resolve issues in the future.
 
 Time to setup the next **Rulebook Activation**!
 
-### ****Step 1: Create Network Event Rulebook Activation****
+### **Step 1: Create Network Event Rulebook Activation**
 
-1. Navigate to the **aap** tab 
-2. Go to **Automation Decisions** → **Rulebook Activation**
-3. Create a new rulebook activation with the following details:
+1. **Navigate to the AAP tab**
+2. **Go to Automation Decisions → Rulebook Activation**
+3. **Create a new rulebook activation** with the following details:
 
-| Field | Value |
-|-------|-------|
-| **Name** | Network Event |
-| **Description** | Rulebook to listen to Network Telemetry |
-| **Organization** | Default |
-| **Project** | Roadshow |
-| **Rulebook** | **network_stats.yml** |
-| **Decision Environment** | Network Telemetry |
-| **Credential** | AAP |
-| **Restart Policy** | On failure |
+[cols="1,2", options="header"]
+|===
+|Field |Value
 
-4. Click **Create rulebook activation**
+|Name
+|Network Event
 
-> 📝 **NOTE:** Once activated, you should see that this rulebook is running and looking for multiple conditions.
+|Description
+|Rulebook to listen to Network Telemetry
 
-### ****Step 2: Trigger Network Failure****
+|Organization
+|Default
+
+|Project
+|Roadshow
+
+|Rulebook
+|network_stats.yml
+
+|Decision Environment
+|Network Telemetry
+
+|Credential
+|AAP
+
+|Restart Policy
+|On failure
+|===
+
+4. **Click Create rulebook activation**
+
+[NOTE]
+====
+Once activated, you should see that this rulebook is running and looking for multiple conditions.
+====
+
+### **Step 2: Trigger Network Failure**
 
 It's time for our co-worker friend **S.E.A.N** once again!
 
-1. Navigate to the **S.E.A.N** tab
-2. Tell **S.E.A.N** to break the network by selecting option **3**
+1. **Navigate to the S.E.A.N tab**
+2. **Tell S.E.A.N to break the network** by selecting option **3**
 
-> ⚠️ **IMPORTANT:** This will trigger a template via API to disable a port affecting the BGP configuration on the network.
+[IMPORTANT]
+====
+This will trigger a template via API to disable a port affecting the BGP configuration on the network.
+====
 
 Hopefully, our **EDA Controller** will receive this event from our streaming network telemetry and get our **Automation Controller** to use the troubleshooting template created by our network team!
 
-### ****Step 3: Monitor Job Execution****
+### **Step 3: Monitor Job Execution**
 
-1. Navigate to **aap** → **Automation Execution** → **Jobs**
-2. Observe the templates reacting to:
-   - The API request from **S.E.A.N**
-   - The network event
+1. **Navigate to AAP → Automation Execution → Jobs**
+2. **Observe the templates reacting to:**
+   * The API request from **S.E.A.N**
+   * The network event
 
 Once the event meets the conditions in our ansible rulebook, it will tell our automation controller to run **Network Troubleshooting**.
 
-![Troubleshooting](/network-troubleshooting.png)
+[role="border"]
+image::network-troubleshooting.png[Network Troubleshooting Job]
 
-### ****Step 4: Review Rule Audit****
+### **Step 4: Review Rule Audit**
 
-1. Navigate to **aap** → **Automation Decisions** → **Rule Audit**
-2. Look for the BGP change detected event that we acted on
-3. Click on the event to get more details of the trigger event
-4. View the event payload under **Events** and the **Action** that was taken
+1. **Navigate to AAP → Automation Decisions → Rule Audit**
+2. **Look for the BGP change detected event** that we acted on
+3. **Click on the event** to get more details of the trigger event
+4. **View the event payload** under **Events** and the **Action** that was taken
 
-![Rule-audit](/rule-audit.png)
+[role="border"]
+image::rule-audit.png[Rule Audit Details]
 
 ---
 
-## 📋 Network Troubleshooting Results
+## Network Troubleshooting Results
 
-### ****Step 5: Examine Troubleshooting Output****
+### **Step 5: Examine Troubleshooting Output**
 
-1. Navigate to **Automation Execution** → **Jobs**
-2. Look at the output from the **Network Troubleshooting** template
+1. **Navigate to Automation Execution → Jobs**
+2. **Look at the output** from the **Network Troubleshooting** template
 
-You will see a number of automated responses to the network issue:
-- ✅ Switch configurations are backed up
-- ✅ BGP is checked
-- ✅ Connectivity to all switches is verified  
-- ✅ Data is gathered and logged to ITSM
+**You will see a number of automated responses** to the network issue:
+* ✅ Switch configurations are backed up
+* ✅ BGP is checked
+* ✅ Connectivity to all switches is verified
+* ✅ Data is gathered and logged to ITSM
 
-![logged](/logged.png)
+[role="border"]
+image::logged.png[Troubleshooting Results Logged]
 
-### ****Step 6: View ServiceNow Ticket****
+### **Step 6: View ServiceNow Ticket**
 
 The ticket has been automatically created. Let's examine it:
 
-1. Navigate to the **ServiceNow** tab
-2. Login with these credentials:
+1. **Navigate to the ServiceNow tab**
+2. **Login with these credentials:**
 
-| Username | Password |
-|----------|----------|
-| **aap-roadshow** | **Ans1ble123!** |
+[cols="1,1", options="header"]
+|===
+|Username |Password
 
-3. Click **All** → **Incidents**
+|aap-roadshow
+|Ans1ble123!
+|===
 
-![snow_incidents](../assets/incidents.png)
+3. **Click All → Incidents**
 
-4. Select your Incident ticket from the number provided by the template
+[role="border"]
+image::incidents.png[ServiceNow Incidents List]
 
-![Ticket](../assets/the-ticket.png)
+4. **Select your Incident ticket** from the number provided by the template
 
-You now have a complete report for the networking team to review!
+[role="border"]
+image::the-ticket.png[ServiceNow Incident Ticket Details]
+
+**You now have a complete report** for the networking team to review!
 
 ---
 
-## ✨ Efficiency is More Than Remediation
+## Efficiency Beyond Remediation
 
 It's not all doom and gloom! As we've seen, **Ansible Automation Platform** can add efficiency in responding to events proactively with consistent remediation or information gathering.
 
 We can also utilize **Event-Driven Ansible** to automate mundane tasks like password resets or config changes that consume significant time.
 
-### 🔧 Automated Network Configuration Scenario
+### Automated Network Configuration Scenario
 
 In our remote data centers, we often bring up new systems to process content. This normally means configuring the network for new systems, requiring network engineers to be available when Ops teams need to activate systems.
 
-> 💡 **TIP:** What if we use the event of a port going live to trigger the recommended compliant configuration for that remote network?
+[TIP]
+====
+**What if we use the event of a port going live** to trigger the recommended compliant configuration for that remote network?
+====
 
 We can define the **source of truth** for these switches and remote networks, applied whenever a port becomes active.
 
@@ -134,57 +192,70 @@ my_sot:
       vlan: 30
 ```
 
-### ****Step 7: View Current Port Configuration****
+### **Step 7: View Current Port Configuration**
 
-1. Navigate to **aap** → **Automation Execution** → **Templates**
-2. Trigger the template **Show port config** (located on page 2)
+1. **Navigate to AAP → Automation Execution → Templates**
+2. **Trigger the template Show port config** (located on page 2)
 
 This will show the current configuration of a port on our remote network.
 
-![Port-current](../assets/current-port.png)
+[role="border"]
+image::current-port.png[Current Port Configuration]
 
-### ****Step 8: Simulate New Server Connection****
+### **Step 8: Simulate New Server Connection**
 
 Time for **S.E.A.N** to plug in a new server!
 
-> 📝 **NOTE:** Our network telemetry rulebook is still running and listening to events, so nothing else is needed.
+[NOTE]
+====
+Our network telemetry rulebook is still running and listening to events, so nothing else is needed.
+====
 
-1. Navigate to **S.E.A.N**
-2. Select option **4** to tell **S.E.A.N** to plug in a system
+1. **Navigate to S.E.A.N**
+2. **Select option 4** to tell **S.E.A.N** to plug in a system
 
-### ****Step 9: Monitor Event Processing****
+### **Step 9: Monitor Event Processing**
 
-1. Navigate to **Automation Decisions** → **Rulebook Activations**
-2. Wait for the additional **Fire Count**, indicating the event has been received and processed
+1. **Navigate to Automation Decisions → Rulebook Activations**
+2. **Wait for the additional Fire Count**, indicating the event has been received and processed
 
-![Fire](../assets/firecount.png)
+[role="border"]
+image::firecount.png[Rulebook Fire Count Update]
 
-### ****Step 10: Approve Workflow****
+### **Step 10: Approve Workflow**
 
-1. Navigate to **Automation Execution** → **Jobs**
-2. You'll see a workflow triggered from the port coming online with an approval pending
+1. **Navigate to Automation Execution → Jobs**
+2. **You'll see a workflow triggered** from the port coming online with an approval pending
 
-![Approve_job](../assets/job_approval.png)
+[role="border"]
+image::job_approval.png[Job Approval Required]
 
-3. Select the approval
+3. **Select the approval**
 
-![Approve_WK](../assets/approve_wk.png)
+[role="border"]
+image::approve_wk.png[Workflow Approval Screen]
 
-4. Approve the workflow to configure the port!
+4. **Approve the workflow** to configure the port!
 
-### ****Step 11: Review Completion****
+### **Step 11: Review Completion**
 
-1. Navigate back to **Automation Execution** → **Jobs**
-2. Observe the completion of the workflow
-3. Select the **New Port Configuration** job to view the configuration applied to the activated port
+1. **Navigate back to Automation Execution → Jobs**
+2. **Observe the completion** of the workflow
+3. **Select the New Port Configuration job** to view the configuration applied to the activated port
 
-![NewPort_job](../assets/new-port.png)
+[role="border"]
+image::new-port.png[New Port Configuration Results]
 
-> 🎉 **SUCCESS:** Look mom, configuring a switch with no hands!
+[IMPORTANT]
+====
+**SUCCESS:** Look mom, configuring a switch with no hands!
+====
 
 ---
 
-## 💻 Code Snippets for Review
+## Code Reference
+
+### Network Troubleshooting Automation
 
 Here are key code snippets for automating troubleshooting and fact gathering:
 
@@ -252,24 +323,26 @@ tasks:
     run_once: true
 ```
 
----
+## Lab Summary
 
-## 📝 Lab Summary
+### Completed Tasks
 
-### ✅ Completed Tasks:
+* ✅ **Created Network Event rulebook activation** for telemetry monitoring
+* ✅ **Triggered network failure simulation** via **S.E.A.N**
+* ✅ **Monitored automated troubleshooting response** with consistent fact gathering
+* ✅ **Reviewed ServiceNow incident creation** with detailed network data
+* ✅ **Demonstrated automated port configuration** for new server deployment
+* ✅ **Approved workflow** for new server setup with source-of-truth configuration
+* ✅ **Reviewed code snippets** for network automation implementation
 
-- ✅ Created **Network Event** rulebook activation
-- ✅ Triggered network failure simulation via **S.E.A.N**
-- ✅ Monitored automated troubleshooting response
-- ✅ Reviewed **ServiceNow** incident creation
-- ✅ Demonstrated automated port configuration
-- ✅ Approved workflow for new server setup
-- ✅ Reviewed code snippets for network automation
 
-### 🎯 Key Learning Outcomes:
+### Summary
 
-- **Event-Driven Ansible** provides consistent network troubleshooting
-- Automated fact gathering improves incident response
-- **ITSM integration** streamlines ticket creation
-- **Proactive automation** reduces manual configuration tasks
-- **Approval workflows** maintain control over automated changes
+You've successfully demonstrated how **Ansible Automation Platform** can transform network operations from reactive troubleshooting to proactive, intelligent automation. By combining event-driven monitoring with automated workflows, you've created a system that:
+
+* **Provides consistent troubleshooting procedures** across your network infrastructure
+* **Automates routine configuration tasks** like new server deployment
+* **Integrates seamlessly with ITSM systems** for comprehensive incident management
+* **Maintains operational control** through approval workflows while maximizing efficiency
+
+This foundation enables your organization to implement comprehensive network automation that scales with your infrastructure and evolves with your operational needs.
