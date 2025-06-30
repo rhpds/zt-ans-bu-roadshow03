@@ -1,187 +1,269 @@
-:notoc:
+# Vulnerability Management with Red Hat Insights and Ansible
+*Lab Guide - Advanced Security Automation*
 
-# 🛡️ Vulnerability Management with Red Hat Insights and Ansible
+---
 
+## Table of Contents
 
-### Introduction
+1. [Introduction](#introduction)
+2. [Lab Environment Setup](#lab-environment-setup)
+3. [Exercise 1: Red Hat Insights Integration and Remediation](#exercise-1-red-hat-insights-integration-and-remediation)
+4. [Exercise 2: API-Driven Security Intelligence](#exercise-2-api-driven-security-intelligence)
+5. [Code Reference](#code-reference)
+6. [Architecture Benefits](#architecture-benefits)
+7. [Next Steps](#next-steps)
+
+---
+
+## Introduction
 
 Moving beyond technical automation, you'll now explore how **Ansible Automation Platform** can orchestrate between systems and tools, acting as organizational "glue" that connects different processes and teams. This advanced scenario demonstrates how to integrate vulnerability and compliance management at scale using **Red Hat Insights**.
 
 Vulnerability and compliance management can be tedious, especially at enterprise scale. However, by integrating **Ansible Automation Platform** with **Red Hat Insights**, you can automate these critical security processes while providing real organizational value through reduced mean time to resolution and proactive threat mitigation.
 
+### Learning Objectives
+
+By the end of this lab, you will be able to:
+
+* **Integrate Red Hat Insights** with Ansible Automation Platform for automated vulnerability management
+* **Create and deploy remediation playbooks** directly from security advisories
+* **Leverage Insights APIs** for comprehensive security intelligence gathering
+* **Automate ITSM integration** for streamlined security workflow management
+
 ---
 
-## 🔐 Lab Environment Setup
+## Lab Environment Setup
 
 ### Access Credentials
 
-| **System** | **Username** | **Password** |
-|------------|--------------|--------------|
-| **Ansible Automation Platform** | admin | ansible123! |
-| **ServiceNow** | aap-roadshow | Ans1ble123! |
+[cols="1,1,1", options="header"]
+|===
+|System |Username |Password
 
-> ⚠️ **IMPORTANT:** A Red Hat account is required to access Insights. You can use your existing Red Hat account with active subscriptions, or the Red Hat Developer Account created during the lab prerequisites.
+|Ansible Automation Platform
+|admin
+|ansible123!
+
+|ServiceNow
+|aap-roadshow
+|Ans1ble123!
+|===
+
+[IMPORTANT]
+====
+A Red Hat account is required to access Insights. You can use your existing Red Hat account with active subscriptions, or the Red Hat Developer Account created during the lab prerequisites.
+====
 
 ---
 
-## 🧪 Lab Exercises
+## Exercise 1: Red Hat Insights Integration and Remediation
 
-### Exercise 1: Red Hat Insights Integration and Remediation
+### **Step 1: Configure Insights Credentials**
 
-#### ****Step 1: Configure Insights Credentials****
+1. **Navigate to Automation Execution → Infrastructure → Credentials**
+2. **Locate the pre-configured Insights credential**
+3. **Update the credential** with your Red Hat account or Developer account details
 
-1. Navigate to **Automation Execution** → **Infrastructure** → **Credentials**
-2. Locate the pre-configured **Insights** credential
-3. Update the credential with your Red Hat account or Developer account details
+[role="border"]
+image::insights-creds.png[Insights Credentials Setup]
 
-![Insights Credentials Setup](/insights-creds.png)
+### **Step 2: Synchronize Insights Project**
 
-#### ****Step 2: Synchronize Insights Project****
+1. **Navigate to Automation Execution → Projects**
+2. **Locate the Insights project**
+3. **Click Sync** to synchronize with Red Hat Insights
 
-1. Navigate to **Automation Execution** → **Projects**
-2. Locate the **Insights** project
-3. Click **Sync** to synchronize with Red Hat Insights
+[NOTE]
+====
+This will clear any failed status and establish the connection to Red Hat Insights services.
+====
 
-> 📝 **NOTE:** This will clear any failed status and establish the connection to Red Hat Insights services.
+[role="border"]
+image::insights-sync.png[Insights Project Sync]
 
-![Insights Project Sync](/insights-sync.png)
-
-#### ****Step 3: Register System with Insights****
+### **Step 3: Register System with Insights**
 
 Your RHEL team has provided a template to configure subscription and register the Insights client:
 
-1. Navigate to **Automation Execution** → **Templates**
-2. Launch the **Insights for RHEL** template
-3. When prompted, provide your Red Hat Subscription/Developer account details
+1. **Navigate to Automation Execution → Templates**
+2. **Launch the Insights for RHEL template**
+3. **When prompted, provide** your Red Hat Subscription/Developer account details
 
-![Insights Login Interface](/insight-login.png)
+[role="border"]
+image::insight-login.png[Insights Login Interface]
 
-This template will:
-- ✅ Register the system with Red Hat subscription services
-- ✅ Install and configure the Insights client
-- ✅ Perform the initial system scan
-- ✅ Upload system data to **console.redhat.com**
+**This template will:**
+* ✅ Register the system with Red Hat subscription services
+* ✅ Install and configure the Insights client
+* ✅ Perform the initial system scan
+* ✅ Upload system data to **console.redhat.com**
 
-#### ****Step 4: Access Red Hat Insights Console****
+### **Step 4: Access Red Hat Insights Console**
 
-1. Once the job completes, navigate to the **console.redhat.com** tab
-2. Login with your Red Hat account
-3. Select the **Insights for RHEL** panel
+1. **Once the job completes**, navigate to the **console.redhat.com** tab
+2. **Login with your Red Hat account**
+3. **Select the Insights for RHEL panel**
 
-![Insights for RHEL Dashboard](/insights4rhel.png)
+[role="border"]
+image::insights4rhel.png[Insights for RHEL Dashboard]
 
-> 💡 **TIP:** Red Hat Insights provides comprehensive vulnerability and compliance management, along with many other beneficial services for enterprise infrastructure.
+[TIP]
+====
+Red Hat Insights provides comprehensive vulnerability and compliance management, along with many other beneficial services for enterprise infrastructure.
+====
 
-#### ****Step 5: Review Security Advisories****
+### **Step 5: Review Security Advisories**
 
-1. Navigate to **Content** → **Advisories**
-2. Review the list of CVEs identified for your registered node
+1. **Navigate to Content → Advisories**
+2. **Review the list of CVEs** identified for your registered node
 
-![Security Advisories List](/advisories.png)
+[role="border"]
+image::advisories.png[Security Advisories List]
 
-> 📝 **NOTE:** Each advisory represents a potential security vulnerability that requires attention and possible remediation.
+[NOTE]
+====
+Each advisory represents a potential security vulnerability that requires attention and possible remediation.
+====
 
-#### ****Step 6: Create Remediation Playbook****
+### **Step 6: Create Remediation Playbook**
 
-1. Select a CVE advisory (e.g., **RHSA-2024:10274**)
-2. Click **Remediate**
+1. **Select a CVE advisory** (e.g., **RHSA-2024:10274**)
+2. **Click Remediate**
 
-![Advisory RHSA-2024-10274](/rhsa-2024-10274.png)
+[role="border"]
+image::rhsa-2024-10274.png[Advisory RHSA-2024-10274]
 
 **Remediation Configuration:**
 
-1. Name the remediation playbook: `cve-rhsa-2024-10274`
-2. Click **Next**
-3. Ensure your **node01** is selected in the system review
+1. **Name the remediation playbook:** `cve-rhsa-2024-10274`
+2. **Click Next**
+3. **Ensure your node01 is selected** in the system review
 
-![Insights System Review](/review.png)
+[role="border"]
+image::review.png[Insights System Review]
 
-4. Submit the **Remediation Review**
+4. **Submit the Remediation Review**
 
-#### ****Step 7: Deploy Remediation via Ansible****
+### **Step 7: Deploy Remediation via Ansible**
 
-1. Navigate back to the **aap** tab
-2. Go to **Automation Execution** → **Projects**
-3. Synchronize your **Insights** project to pull the new remediation playbook
+1. **Navigate back to the AAP tab**
+2. **Go to Automation Execution → Projects**
+3. **Synchronize your Insights project** to pull the new remediation playbook
 
 **Create Remediation Template:**
 
-1. Navigate to **Automation Execution** → **Templates**
-2. Create a new template with the following details:
+1. **Navigate to Automation Execution → Templates**
+2. **Create a new template** with the following details:
 
-| **Field** | **Value** |
-|-----------|-----------|
-| **Name** | CVE-2024-1074 |
-| **Description** | Remediation of CVE-2024-1074 |
-| **Organization** | Default |
-| **Project** | Insights |
-| **Inventory** | Video Platform Inventory |
-| **Playbook** | cve-rhsa-2024-10274-****** |
-| **Execution Environment** | RHEL EE |
-| **Credentials** | Application Nodes |
+[cols="1,2", options="header"]
+|===
+|Field |Value
 
-> 📝 **NOTE:** Use the generated playbook name for the Playbook field.
+|Name
+|CVE-2024-1074
 
-3. Save and launch the template
+|Description
+|Remediation of CVE-2024-1074
 
-#### ****Step 8: Verify Remediation Completion****
+|Organization
+|Default
+
+|Project
+|Insights
+
+|Inventory
+|Video Platform Inventory
+
+|Playbook
+|cve-rhsa-2024-10274-******
+
+|Execution Environment
+|RHEL EE
+
+|Credentials
+|Application Nodes
+|===
+
+[NOTE]
+====
+Use the generated playbook name for the Playbook field.
+====
+
+3. **Save and launch the template**
+
+### **Step 8: Verify Remediation Completion**
 
 After the job completes successfully and the node reboots:
 
-1. Navigate to the **console.redhat.com** tab
-2. Select **Automation Toolkit** → **Remediations**
-3. Verify your remediation shows as completed
+1. **Navigate to the console.redhat.com tab**
+2. **Select Automation Toolkit → Remediations**
+3. **Verify your remediation shows as completed**
 
 ---
 
-### Exercise 2: API-Driven Security Intelligence
+## Exercise 2: API-Driven Security Intelligence
 
-#### Understanding Insights API Integration
+### Understanding Insights API Integration
 
 **Red Hat Insights** provides an extensive API that enables you to gather data, build remediation playbooks, and create self-healing infrastructure using **Event-Driven Ansible** source plugins. You'll use this API to gather comprehensive security data for your security teams.
 
-#### ****Step 1: Select Target Advisory****
+### **Step 1: Select Target Advisory**
 
-1. From the **console.redhat.com** tab, navigate to **Content** → **Advisories**
-2. Choose an Advisory ID (e.g., **RHSA-2024:9474**)
+1. **From the console.redhat.com tab**, navigate to **Content → Advisories**
+2. **Choose an Advisory ID** (e.g., **RHSA-2024:9474**)
 
-> 💡 **TIP:** Make note of the specific advisory ID for the next step.
+[TIP]
+====
+Make note of the specific advisory ID for the next step.
+====
 
-#### ****Step 2: Execute CVE Data Collection****
+### **Step 2: Execute CVE Data Collection**
 
-1. Navigate to **Automation Execution** → **Templates**
-2. Launch the **CVE Advisory** template
-3. When prompted, provide:
-   - Your Red Hat subscription/Developer account credentials
-   - The Advisory ID you selected
+1. **Navigate to Automation Execution → Templates**
+2. **Launch the CVE Advisory template**
+3. **When prompted, provide:**
+   * Your Red Hat subscription/Developer account credentials
+   * The Advisory ID you selected
 
-![CVE Advisory Finder](/cve-finder.png)
+[role="border"]
+image::cve-finder.png[CVE Advisory Finder]
 
-> 📝 **NOTE:** This automation will connect to Insights via API and gather comprehensive data about the CVE for your security team, then automatically send this information to your ITSM system.
+[NOTE]
+====
+This automation will connect to Insights via API and gather comprehensive data about the CVE for your security team, then automatically send this information to your ITSM system.
+====
 
-#### ****Step 3: Review Security Intelligence in ServiceNow****
+### **Step 3: Review Security Intelligence in ServiceNow**
 
-1. Note the incident number from the completed job
-2. Navigate to the **servicenow** tab
-3. Login with the ServiceNow credentials:
+1. **Note the incident number** from the completed job
+2. **Navigate to the ServiceNow tab**
+3. **Login with the ServiceNow credentials:**
 
-| **Username** | **Password** |
-|--------------|--------------|
-| aap-roadshow | Ans1ble123! |
+[cols="1,1", options="header"]
+|===
+|Username |Password
+
+|aap-roadshow
+|Ans1ble123!
+|===
 
 **Access Incident Data:**
 
-1. Click **All** → **Incidents**
-2. Select the ticket titled **Advisory CVE Type**
-3. Review the comprehensive CVE data gathered via API from Red Hat Insights
+1. **Click All → Incidents**
+2. **Select the ticket** titled **Advisory CVE Type**
+3. **Review the comprehensive CVE data** gathered via API from Red Hat Insights
 
-![CVE Ticket Data](/cve-data.png)
+[role="border"]
+image::cve-data.png[CVE Ticket Data]
 
-> 🎯 **SUCCESS:** Your security teams now have complete, actionable data about the CVE, enabling them to make informed decisions about remediation priorities and strategies.
+[IMPORTANT]
+====
+**SUCCESS:** Your security teams now have complete, actionable data about the CVE, enabling them to make informed decisions about remediation priorities and strategies.
+====
 
 ---
 
-## 💻 Code Reference
+## Code Reference
 
 ### Insights Registration and Scanning Automation
 
@@ -216,59 +298,13 @@ tasks:
     changed_when: __insights_scan.rc == 0
 ```
 
-### Key Components Explained
+### Summary
 
-**Subscription Management:**
-- Automates Red Hat subscription registration
-- Enables automatic entitlement attachment
-- Ensures proper licensing for Insights services
+You've successfully demonstrated how **Ansible Automation Platform** integrated with **Red Hat Insights** can transform reactive security operations into proactive, intelligent automation. By combining vulnerability management with API-driven security intelligence, you've created a system that:
 
-**Insights Client Configuration:**
-- Installs and configures the Insights client
-- Registers systems with Red Hat Insights
-- Performs initial system scanning and data upload
+* **Automates vulnerability discovery** and assessment across your infrastructure
+* **Generates and deploys remediation playbooks** directly from security advisories
+* **Provides comprehensive security intelligence** to your security teams through ITSM integration
+* **Reduces manual overhead** while improving security posture and compliance
 
-**API Integration:**
-- Leverages Insights APIs for data collection
-- Enables programmatic access to vulnerability data
-- Supports integration with external systems (ITSM, monitoring tools)
-
----
-
-## 🏗️ Architecture Benefits
-
-### Automated Vulnerability Management
-
-**Proactive Security:**
-- Automatic vulnerability discovery and assessment
-- Continuous system monitoring and analysis
-- Integrated remediation playbook generation
-
-**Operational Efficiency:**
-- Reduced manual security assessment overhead
-- Automated data collection and reporting
-- Streamlined remediation workflows
-
-**Business Value:**
-- Improved security posture and compliance
-- Reduced exposure time for vulnerabilities
-- Enhanced audit readiness and documentation
-
-### Integration Ecosystem
-
-**Red Hat Insights Integration:**
-- Centralized vulnerability and compliance management
-- Enterprise-grade security intelligence
-- Automated remediation recommendations
-
-**ITSM Integration:**
-- Automatic ticket creation with detailed CVE data
-- Seamless workflow integration
-- Comprehensive audit trails
-
-**API-Driven Architecture:**
-- Scalable data collection and processing
-- Flexible integration with existing tools
-- Support for custom security workflows
-
----
+This foundation enables your organization to implement comprehensive security automation that scales with your infrastructure and evolves with the threat landscape.
