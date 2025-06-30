@@ -1,19 +1,6 @@
 # Network Automation with Event-Driven Ansible
 *Lab Guide - Advanced Network Operations*
 
----
-
-## Table of Contents
-
-1. [Introduction](#introduction)
-2. [Events to Action](#events-to-action)
-3. [Network Troubleshooting Results](#network-troubleshooting-results)
-4. [Efficiency Beyond Remediation](#efficiency-beyond-remediation)
-5. [Code Reference](#code-reference)
-6. [Lab Summary](#lab-summary)
-7. [Next Steps](#next-steps)
-
----
 
 ## Introduction
 
