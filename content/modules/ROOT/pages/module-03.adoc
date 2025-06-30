@@ -129,6 +129,7 @@ image::rule-audit.png[Rule Audit Details]
 2. **Look at the output** from the **Network Troubleshooting** template
 
 **You will see a number of automated responses** to the network issue:
+
 * ✅ Switch configurations are backed up
 * ✅ BGP is checked
 * ✅ Connectivity to all switches is verified
