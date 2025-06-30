@@ -2,6 +2,9 @@
 
 # 🌐 Oh No, What's Next - The Network?
 
+
+### Introduction
+
 Delivering video across the globe can be a complicated task! While we can use **Insights** and **Ansible** for CVE management, we can also experience network problems beyond these issues.
 
 However, it's not always the best approach to remediate issues on a network without getting the full picture of what is taking place. In the previous example we were able to fix a common configuration issue on our Web App, but for the network we would take a different approach.
