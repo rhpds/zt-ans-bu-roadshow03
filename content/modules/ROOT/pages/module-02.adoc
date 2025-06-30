@@ -1,6 +1,4 @@
 :notoc:
-:toc:
-:toc-placement: auto
 
 # 🛡️ Vulnerability Management with Red Hat Insights and Ansible
 
