@@ -1,19 +1,6 @@
 # Vulnerability Management with Red Hat Insights and Ansible
 *Lab Guide - Advanced Security Automation*
 
----
-
-## Table of Contents
-
-1. [Introduction](#introduction)
-2. [Lab Environment Setup](#lab-environment-setup)
-3. [Exercise 1: Red Hat Insights Integration and Remediation](#exercise-1-red-hat-insights-integration-and-remediation)
-4. [Exercise 2: API-Driven Security Intelligence](#exercise-2-api-driven-security-intelligence)
-5. [Code Reference](#code-reference)
-6. [Architecture Benefits](#architecture-benefits)
-7. [Next Steps](#next-steps)
-
----
 
 ## Introduction
 
@@ -128,7 +115,7 @@ Each advisory represents a potential security vulnerability that requires attent
 ### **Step 6: Create Remediation Playbook**
 
 1. **Select a CVE advisory** (e.g., **RHSA-2024:10274**)
-2. **Click Remediate**
+2. **Click Plan Remediate**
 
 [role="border"]
 image::rhsa-2024-10274.png[Advisory RHSA-2024-10274]
