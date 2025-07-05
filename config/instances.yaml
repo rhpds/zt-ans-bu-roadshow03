@@ -214,7 +214,7 @@ virtualmachines:
 
   - name: "podman-host"
     image: "rhel-8.7"
-    memory: "4G"
+    memory: "8G"
     cores: 16
     image_size: "30Gi"
     tags:
