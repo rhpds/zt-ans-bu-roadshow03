@@ -31,19 +31,19 @@ Your first task is to connect a RHEL server to Red Hat Insights and then use an 
 +
 Navigate to **Automation Execution** → **Infrastructure** → **Credentials**. Find and edit the credential named `Insights`. **Update this credential with your personal Red Hat account username and password.**
 +
-image::../assets/images/insights-creds.png[Insights credential configuration page, opts="border"]
+image::insights-creds.png[Insights credential configuration page, opts="border"]
 
 . **Synchronize the Insights project.**
 +
 Once the credential is saved, navigate to **Automation Execution** → **Projects** and click the sync icon for the **Insights** project. The project should now synchronize successfully.
 +
-image::../assets/images/images/insights-sync.png[Synchronizing the Insights project, opts="border"]
+image::images/insights-sync.png[Synchronizing the Insights project, opts="border"]
 
 . **Register a server with Red Hat Insights.**
 +
 Navigate to **Automation Execution** → **Templates** and launch the **Insights for RHEL** job template. When prompted by the survey, enter your Red Hat account credentials again.
 +
-image::../assets/images/insight-login.png[Entering Red Hat credentials in the survey, opts="border"]
+image::insight-login.png[Entering Red Hat credentials in the survey, opts="border"]
 +
 This template will register the server with Red Hat Subscription Manager, install the Insights client, and perform the initial system scan and upload.
 
@@ -51,15 +51,15 @@ This template will register the server with Red Hat Subscription Manager, instal
 +
 Once the job completes, navigate to the `console.redhat.com` tab in your lab environment and log in. Go to **Red Hat Insights**.
 +
-image::../assets/images/insights4rhel.png[Red Hat Insights dashboard, opts="border"]
+image::insights4rhel.png[Red Hat Insights dashboard, opts="border"]
 +
 From the left menu, navigate to **Content** → **Advisories**. This page lists all applicable CVEs for your registered node. Select an advisory (e.g., `RHSA-2024:10274`) and click the **Remediate** button.
 +
-image::../assets/images/rhsa-2024-10274.png[Details for a specific advisory, opts="border"]
+image::rhsa-2024-10274.png[Details for a specific advisory, opts="border"]
 +
 Name the new remediation playbook `cve-rhsa-2024-10274` and proceed through the review steps to create it.
 +
-image::../assets/images/review.png[Reviewing systems for remediation, opts="border"]
+image::review.png[Reviewing systems for remediation, opts="border"]
 
 . **Create and launch the remediation job in AAP.**
 +
@@ -94,7 +94,7 @@ From the `console.redhat.com` tab, navigate back to **Content** → **Advisories
 +
 Return to the `aap` tab. Navigate to **Automation Execution** → **Templates** and launch the **CVE Advisory** job template. When prompted by the survey, enter your Red Hat credentials and the Advisory ID you just copied.
 +
-image::../assets/images/cve-finder.png[Entering credentials and an Advisory ID in the survey, opts="border"]
+image::cve-finder.png[Entering credentials and an Advisory ID in the survey, opts="border"]
 
 . **Review the ServiceNow incident.**
 +
@@ -102,7 +102,7 @@ This job is configured to connect to Insights, gather all relevant data about th
 +
 Navigate to the `servicenow` tab in your lab environment and log in. Click on **All**, then **Incidents**. Find the new ticket (titled "Advisory CVE Type") and open it to view all the data gathered from the Insights API.
 +
-image::../assets/images/cve-data.png[ServiceNow ticket with CVE data from Insights, opts="border"]
+image::cve-data.png[ServiceNow ticket with CVE data from Insights, opts="border"]
 +
 Your security team now has all the relevant data about the CVE and can proceed with remediation.
 
