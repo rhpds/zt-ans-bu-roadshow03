@@ -74,7 +74,7 @@ Select option **1** to run the `Break Web-Application` job. You can navigate to 
 +
 Once the job completes, refresh the `Web-App` tab. You should now see an error message.
 +
-image::../assets/images/broken-app.png[Web application showing an error, opts="border"]
+image::broken-app.png[Web application showing an error, opts="border"]
 
 . **Restore the application.**
 +
@@ -90,7 +90,7 @@ Simulating the failure was useful, but now let's prevent it from causing downtim
 +
 In your `aap` tab, go to **Automation Decisions** → **Rulebook Activations**. This is where you can configure Event-Driven Ansible to listen for specific events and trigger automated responses.
 +
-image::../assets/images/rules.png[Rulebook Activations page, opts="border"]
+image::rules.png[Rulebook Activations page, opts="border"]
 
 . **Create a new rulebook activation.**
 +
@@ -110,7 +110,7 @@ Click **Create rulebook activation**.
 +
 On the Rulebook Activations page, wait for the status of your new activation to change to **Running**.
 +
-image::../assets/images/web-app.png[Rulebook activation in a Running state, opts="border"]
+image::web-app.png[Rulebook activation in a Running state, opts="border"]
 +
 Your Ansible Automation Platform is now actively listening for events from the application server. The `Webapp.yml` rulebook is configured to watch for a failure of the `httpd` service.
 
