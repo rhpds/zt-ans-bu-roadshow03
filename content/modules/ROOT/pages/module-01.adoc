@@ -123,3 +123,5 @@ Navigate back to the `S.E.A.N` tab and select option **1** one more time to brea
 Go directly to the `aap` tab and watch the **Automation Execution** → **Jobs** page. You will see the `Break Web-Application` job run as expected. However, a few seconds after it completes, the **`Restore Web-Application`** job will kick off by itself!
 +
 Event-Driven Ansible detected that the `httpd` service failed to restart during the "break" job and automatically triggered the "restore" job to remediate the issue, significantly reducing downtime without any human intervention.
+
+v0.0.3
