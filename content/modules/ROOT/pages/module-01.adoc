@@ -40,13 +40,13 @@ To simulate the failure accurately, you will use a tool named S.E.A.N. This simu
 * **A**: Antisocial API
 * **N**: Network Nullifier
 +
-image::.../assets/images/sean.png[S.E.A.N - The Co-Worker Simulator, opts="border"]
+::.../assets/s/sean.png[S.E.A.N - The Co-Worker Simulator, opts="border"]
 
 . **Create an API token in AAP.**
 +
 Navigate to your `aap` tab. From the main menu, go to **Access Management** → **Users**. Select the `admin` user and click on the **Tokens** tab.
 +
-image::../assets/images/where-token.png[Location of the Tokens tab for a user, opts="border"]
+::../assets/s/where-token.png[Location of the Tokens tab for a user, opts="border"]
 +
 Click the **Create token** button and configure it with the following details:
 +
@@ -62,13 +62,13 @@ WARNING: You will only see this token once. Be sure to copy it, as you will need
 +
 Navigate to the `S.E.A.N` tab. When prompted, paste the API token into the terminal. Once authenticated, a menu of options will appear.
 +
-image::../assets/images/token-sean.png[Pasting the API token into S.E.A.N, opts="border"]
+::../assets/s/token-sean.png[Pasting the API token into S.E.A.N, opts="border"]
 
 . **Simulate the application failure.**
 +
 Select option **1** to run the `Break Web-Application` job. You can navigate to the `aap` tab and view the job running under **Automation Execution** → **Jobs**.
 +
-image::../assets/images/break-web.png[Break Web-Application job running, opts="border"]
+::../assets/s/break-web.png[Break Web-Application job running, opts="border"]
 
 . **Verify the application is broken.**
 +
