@@ -40,19 +40,19 @@ Navigate to the `S.E.A.N` tab. Select option **3** to have the simulator make a 
 +
 The Event-Driven Ansible controller will receive an event from the network telemetry. Navigate to the `aap` tab and go to **Automation Execution** → **Jobs**. You will see two jobs: one triggered by S.E.A.N's API call, and a second, **Network Troubleshooting**, which was triggered automatically by the event.
 +
-image::../assets/images/network-troubleshooting.png[Network Troubleshooting job triggered by an event, opts="border"]
+image::network-troubleshooting.png[Network Troubleshooting job triggered by an event, opts="border"]
 
 . **Examine the Rule Audit.**
 +
 In the `aap` tab, navigate to **Automation Decisions** → **Rule Audit**. You will see a "BGP change detected" event. Click on it to see the event payload and the action that was taken.
 +
-image::../assets/images/rule-audit.png[Rule Audit showing the BGP change event, opts="border"]
+image::rule-audit.png[Rule Audit showing the BGP change event, opts="border"]
 
 . **Review the troubleshooting output and ServiceNow ticket.**
 +
 Go to **Automation Execution** → **Jobs** and look at the output from the **Network Troubleshooting** job. The playbook backed up switch configurations, checked BGP status, verified reachability, and logged all this information in a ServiceNow ticket. Note the incident number from the job output.
 +
-image:../assets/images/logged.png[Job output showing the new incident number, opts="border"]
+image:logged.png[Job output showing the new incident number, opts="border"]
 +
 To view the ticket, navigate to the `ServiceNow` tab and log in.
 +
@@ -65,9 +65,9 @@ To view the ticket, navigate to the `ServiceNow` tab and log in.
 +
 Click on **All** → **Incidents**. Find your ticket in the list to see a full report ready for the networking team.
 +
-image::../assets/images/incidents.png[Incidents list in ServiceNow, opts="border"]
+image::incidents.png[Incidents list in ServiceNow, opts="border"]
 +
-image::../assets/images/the-ticket.png[Detailed incident ticket with troubleshooting data, opts="border"]
+image::the-ticket.png[Detailed incident ticket with troubleshooting data, opts="border"]
 
 ---
 
@@ -94,7 +94,7 @@ In the `aap` tab, navigate to **Automation Execution** → **Templates** and lau
 +
 NOTE: This template may be on the second page of the templates list.
 +
-image::../assets/images/current-port.png[Current (default) port configuration, opts="border"]
+image::current-port.png[Current (default) port configuration, opts="border"]
 
 . **Simulate plugging in a new server.**
 +
@@ -104,17 +104,17 @@ Navigate to the `S.E.A.N` tab and select option **4**. This simulates an operato
 +
 The running network rulebook will detect the "port up" event. In the `aap` tab, go to **Automation Decisions** → **Rulebook Activations** and notice the **Fire Count** has increased.
 +
-image::../assets/images/firecount.png[Increased fire count indicating a new event, opts="border"]
+image::firecount.png[Increased fire count indicating a new event, opts="border"]
 +
 Now, go to **Automation Execution** → **Jobs**. A new workflow has been triggered, but it is paused with a **Pending** status, waiting for approval.
 +
-image::../assets/images/job_approval.png[Job waiting for approval, opts="border"]
+image::job_approval.png[Job waiting for approval, opts="border"]
 
 . **Approve the workflow.**
 +
 Click on the pending approval step in the job list.
 +
-image::../assets/images/approve_wk.png[Workflow approval prompt, opts="border"]
+image::approve_wk.png[Workflow approval prompt, opts="border"]
 +
 Click the **Approve** button to allow the workflow to configure the port.
 
@@ -122,7 +122,7 @@ Click the **Approve** button to allow the workflow to configure the port.
 +
 Once the workflow completes, click on the **New Port Configuration** job step. The output will show the new, compliant configuration that has been applied to the activated port. You've just configured a switch port without ever touching a command line!
 +
-image::../assets/images/new-port.png[Output showing the new port configuration, opts="border"]
+image::new-port.png[Output showing the new port configuration, opts="border"]
 
 ---
 
