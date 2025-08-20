@@ -1,5 +1,5 @@
 = Lab Guide: Operational Efficiency with Event-Driven Ansible
-:toc:
+:notoc:
 :toc-title: Table of Contents
 :sectnums:
 :icons: font
