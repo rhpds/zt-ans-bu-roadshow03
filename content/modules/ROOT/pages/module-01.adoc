@@ -1,308 +1,125 @@
-# Operational Efficiency with Event-Driven Ansible
-*Lab Guide - Scenario 03*
+= Lab Guide: Operational Efficiency with Event-Driven Ansible
+:toc:
+:toc-title: Table of Contents
+:sectnums:
+:icons: font
 
-## Overview
-
-### Scenario 03: Operational Efficiency
-
-Until now, you've focused primarily on technical automation - automating specific technical requirements that greatly benefit your technical teams. To unlock additional value from **Ansible Automation Platform**, you need to explore how it can orchestrate between systems and tools, acting as the organizational "glue" that connects different processes and teams.
-
-This scenario demonstrates how to utilize advanced features of **Ansible Automation Platform** to reduce mean time to resolution (MTTR), prevent outages, and ultimately provide real business value to your organization through intelligent, event-driven automation.
-
-### Learning Objectives
-
-By the end of this lab, you will be able to:
-
-* **Simulate application failures** using API-driven automation
-* **Implement event-driven automation** to detect and respond to system events
-* **Configure rulebook activations** for proactive incident response
-* **Understand the business value** of automated remediation
+_A guide to using the advanced features of Ansible Automation Platform, like Event-Driven Ansible, to reduce resolution time and prevent outages._
 
 ---
 
-## Prerequisites
+== Scenario: Operational Efficiency
 
-[IMPORTANT]
-====
-This lab requires Red Hat account access for Red Hat Insights integration. If you don't have a Red Hat account, please register at https://developers.redhat.com/
-====
+Up until now, you have focused on technical automation. To unlock additional value, you can use Ansible Automation Platform to orchestrate between systems and act as the "glue" in your organization.
 
-[role="border"]
-image::dev-redhat.png[Red Hat Developer Portal]
+While your streaming platform is now easier to provision and configure, failures still happen. What if you could automate the response to those failures?
 
-[role="border"]
-image::reg-dev.png[Registration Process]
-
----
-
-## Lab Environment Setup
-
-### Access Credentials
-
-[cols="1,1,1", options="header"]
+.Credentials
+[cols="1,1", options="header"]
 |===
-|System |Username |Password
-
-|Ansible Automation Platform
-|admin
-|ansible123!
-
-|ServiceNow
-|aap-roadshow
-|Ans1ble123!
+| Ansible Automation Platform | ServiceNow
+| `admin` / `ansible123!` | `aap-roadshow` / `Ans1ble123!`
 |===
 
-### Background Context
-
-Your streaming platform has benefited significantly from your automation journey. You can now provision, configure, and maintain infrastructure seamlessly. However, like most organizations, you still experience occasional failures that impact content delivery to customers.
-
-[TIP]
-====
-**The Question:** Can you automate responses to everything? Let's find out...
-====
-
 ---
 
-## Exercise 1: Simulating Application Failures
+== Simulating an Application Failure
 
-### Understanding the Problem
+Last week, your streaming service was disrupted by an application failure that took hours to resolve. Let's see how Ansible Automation Platform could have helped.
 
-Last week, your streaming service was disrupted due to a web application failure. It took hours to identify and resolve the issue after the fault occurred. While you hope this doesn't happen again, imagine how much time you could save with the ability to detect and respond to faults as soon as they happen.
+. **Verify the web application is working.**
++
+Navigate to the `Web-App` tab in your lab environment. You should see the application is online and working correctly.
 
-### **Step 1: Verify Application Health**
-
-1. **Navigate to the Web-App tab**
-2. **Verify that your application is working** in the developer environment
-3. **Feel free to watch the latest episode** of *The NC Office*
-
-[NOTE]
-====
-This confirms the application is functioning correctly and provides entertainment while you work!
-====
-
-### **Step 2: Meet S.E.A.N - The Co-Worker Simulator**
-
-To simulate issues accurately, you'll use a specialized testing tool called **S.E.A.N**:
-
+. **Meet the "Co-Worker Simulator".**
++
+To simulate the failure accurately, you will use a tool named S.E.A.N. This simulator uses the Ansible Automation Platform API to create issues on demand.
++
 * **S**: System Saboteur
-* **E**: Error Magnet  
+* **E**: Error Magnet
 * **A**: Antisocial API
 * **N**: Network Nullifier
++
+image::.../assets/images/sean.png[S.E.A.N - The Co-Worker Simulator, opts="border"]
 
-**S.E.A.N** leverages another powerful feature of **Ansible Automation Platform**: _The API_
+. **Create an API token in AAP.**
++
+Navigate to your `aap` tab. From the main menu, go to **Access Management** → **Users**. Select the `admin` user and click on the **Tokens** tab.
++
+image::../assets/images/where-token.png[Location of the Tokens tab for a user, opts="border"]
++
+Click the **Create token** button and configure it with the following details:
++
+* **OAuth application:** (leave blank)
+* **Description:** `API Access Token`
+* **Scope:** `Write`
++
+Click **Create token** and copy the generated token.
 
-[role="border"]
-image::sean.png[S.E.A.N Co-Worker Simulator]
+WARNING: You will only see this token once. Be sure to copy it, as you will need it to authenticate S.E.A.N.
 
-### **Step 3: Create API Access Token**
+. **Authenticate the S.E.A.N simulator.**
++
+Navigate to the `S.E.A.N` tab. When prompted, paste the API token into the terminal. Once authenticated, a menu of options will appear.
++
+image::../assets/images/token-sean.png[Pasting the API token into S.E.A.N, opts="border"]
 
-1. **Select the hamburger menu icon**
-2. **Navigate to Access Management → Users**
-3. **Select the admin user**
-4. **Click on the Tokens tab**
-5. **Click Create token**
+. **Simulate the application failure.**
++
+Select option **1** to run the `Break Web-Application` job. You can navigate to the `aap` tab and view the job running under **Automation Execution** → **Jobs**.
++
+image::../assets/images/break-web.png[Break Web-Application job running, opts="border"]
 
-[role="border"]
-image::where-token.png[AAP Token Creation Interface]
+. **Verify the application is broken.**
++
+Once the job completes, refresh the `Web-App` tab. You should now see an error message.
++
+image::../assets/images/broken-app.png[Web application showing an error, opts="border"]
 
-**Configure the token** with the following settings:
-
-[cols="1,2", options="header"]
-|===
-|Field |Value
-
-|OAuth application
-|Leave blank
-
-|Description
-|API Access Token
-
-|Scope
-|Write
-|===
-
-6. **Copy the generated token immediately**
-
-[WARNING]
-====
-Store this token securely as it's required to authenticate S.E.A.N against the Ansible Automation Platform API. You won't be able to view it again after creation.
-====
-
-### **Step 4: Configure S.E.A.N**
-
-1. **Navigate to the S.E.A.N tab**
-2. **When prompted for the token**, right-click in the terminal and select "Paste"
-3. **Enter your copied token**
-
-Once authenticated, a menu of simulation options will appear.
-
-[role="border"]
-image::token-sean.png[S.E.A.N Token Input]
-
-### **Step 5: Simulate Application Failure**
-
-1. **Select option 1** to simulate web application configuration failure
-
-[NOTE]
-====
-This will trigger an API call to Ansible Automation Platform, demonstrating how external systems can interact with your automation infrastructure.
-====
-
-### **Step 6: Monitor Automation Response**
-
-1. **Navigate to the AAP tab**
-2. **Go to Automation Execution → Jobs**
-3. **Find the Ansible Job** titled *Break Web-Application*
-
-[role="border"]
-image::break-web.png[Break Web Application Job]
-
-### **Step 7: Verify Application Failure**
-
-1. **Once the job completes**, navigate to the Web-App tab
-2. **Refresh the page**
-3. **You should see an error message** indicating the service is no longer connecting
-
-[role="border"]
-image::broken-app.png[Broken Application Display]
-
-### **Step 8: Restore Application**
-
-1. **Return to the S.E.A.N tab**
-2. **Select option 2** to restore the application configuration
-3. **Verify the restoration** by checking:
-   * Job status in Automation Execution → Jobs
-   * Application availability in the Web-App tab
+. **Restore the application.**
++
+Return to the `S.E.A.N` tab and select option **2**. This will run the `Restore Web-Application` job. Verify in the `aap` Jobs view that it completes successfully, then refresh the `Web-App` tab to confirm the application is back online.
 
 ---
 
-## Exercise 2: Implementing Event-Driven Automation
+== Automating Remediation with Event-Driven Ansible
 
-### Understanding Event-Driven Ansible
+Simulating the failure was useful, but now let's prevent it from causing downtime in the future using Event-Driven Ansible.
 
-**S.E.A.N** has demonstrated how to break systems, but now you'll implement proactive automation to prevent future issues, saving time and money while allowing your technical team to rest easy.
+. **Navigate to Rulebook Activations.**
++
+In your `aap` tab, go to **Automation Decisions** → **Rulebook Activations**. This is where you can configure Event-Driven Ansible to listen for specific events and trigger automated responses.
++
+image::../assets/images/rules.png[Rulebook Activations page, opts="border"]
 
-### **Step 1: Access Automation Decisions**
+. **Create a new rulebook activation.**
++
+Click **Create rulebook activation** and configure it with the following details:
++
+* **Name:** `Web-App Event`
+* **Description:** `Rulebook to listen to configuration issues`
+* **Project:** `Roadshow`
+* **Rulebook:** `Webapp.yml`
+* **Decision environment:** `Web Server`
+* **Credential:** `AAP`
+* **Restart Policy:** `On failure`
++
+Click **Create rulebook activation**.
 
-1. **Navigate to the AAP tab**
-2. **Select Automation Decisions**
-3. **Click on Rulebook Activations**
+. **Wait for the rulebook to be active.**
++
+On the Rulebook Activations page, wait for the status of your new activation to change to **Running**.
++
+image::../assets/images/web-app.png[Rulebook activation in a Running state, opts="border"]
++
+Your Ansible Automation Platform is now actively listening for events from the application server. The `Webapp.yml` rulebook is configured to watch for a failure of the `httpd` service.
 
-[TIP]
-====
-Event-Driven Ansible uses rulebooks to listen for specific events on your infrastructure and automatically respond to them.
-====
+. **Trigger the failure again.**
++
+Navigate back to the `S.E.A.N` tab and select option **1** one more time to break the application.
 
-[role="border"]
-image::rules.png[Rulebook Activations]
-
-### **Step 2: Create Rulebook Activation**
-
-1. **Click Create rulebook activation**
-2. **Configure with the following details**:
-
-[cols="1,2", options="header"]
-|===
-|Field |Value
-
-|Name
-|Web-App Event
-
-|Description
-|Rulebook to listen to configuration issues
-
-|Organization
-|Default
-
-|Project
-|Roadshow
-
-|Rulebook
-|Webapp.yml
-
-|Decision Environment
-|Web Server
-
-|Credential
-|AAP
-
-|Restart Policy
-|On failure
-|===
-
-3. **Click Create rulebook activation**
-4. **Return to Rulebook Activations**
-5. **Wait until the rulebook shows a Running state**
-
-[role="border"]
-image::web-app.png[Web App Rulebook Running]
-
-### **Step 3: Understanding Event Monitoring**
-
-Your **Ansible Automation Platform** is now listening to events from your application server. Every event generated on this server becomes a source of information for your automation platform.
-
-[NOTE]
-====
-Currently, you're monitoring for httpd service failures, but this could be expanded to watch for any specific events you want to track.
-====
-
-### **Step 4: Test Automated Remediation**
-
-1. **Navigate back to S.E.A.N**
-2. **Select option 1 again** to break the application
-3. **Immediately go to the AAP tab**
-4. **Monitor Automation Execution → Jobs**
-
-**You'll observe the following sequence:**
-
-* ⚡ The *Break Web-Application* template is triggered
-* ⚡ Within seconds of completion, the *Restore Web-Application* template automatically starts
-* ⚡ The issue is fixed automatically, reducing downtime significantly
-
-### **Step 5: Analyze Automated Response**
-
-1. **Navigate into the Break Web-Application job run**
-2. **Examine the job details**
-
-[IMPORTANT]
-====
-**Key Insight:** You'll see that the httpd service was unable to restart after S.E.A.N made configuration changes. This failure is the trigger that Event-Driven Ansible used to automatically remediate the configuration and restore the service!
-====
-
-
-
-## Code Reference
-
-### Event-Driven Rulebook Example
-
-```yaml
----
-- name: Web Application Monitoring
-  hosts: all
-  sources:
-    - ansible.eda.journald:
-        hostname: "{{ ansible_host }}"
-        port: 5140
-        transport: tcp
-  rules:
-    - name: Restart httpd on failure
-      condition: event.message is match(".*httpd.*failed.*")
-      action:
-        run_job_template:
-          name: "Restore Web-Application"
-          organization: "Default"
-```
-
----
-
-
-### Summary
-
-You've successfully demonstrated how **Ansible Automation Platform** can transform reactive operations into proactive, intelligent automation. By combining API-driven automation with event-driven responses, you've created a system that:
-
-* **Reduces MTTR** from hours to seconds
-* **Prevents customer-impacting outages**
-* **Frees technical teams** to focus on strategic initiatives
-* **Provides measurable business value** through improved reliability
-
-This foundation positions your organization to implement comprehensive operational automation that scales with your business needs.
+. **Observe the automated remediation.**
++
+Go directly to the `aap` tab and watch the **Automation Execution** → **Jobs** page. You will see the `Break Web-Application` job run as expected. However, a few seconds after it completes, the **`Restore Web-Application`** job will kick off by itself!
++
+Event-Driven Ansible detected that the `httpd` service failed to restart during the "break" job and automatically triggered the "restore" job to remediate the issue, significantly reducing downtime without any human intervention.
