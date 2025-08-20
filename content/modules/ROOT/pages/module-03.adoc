@@ -108,7 +108,7 @@ image::../assets/images/firecount.png[Increased fire count indicating a new even
 +
 Now, go to **Automation Execution** → **Jobs**. A new workflow has been triggered, but it is paused with a **Pending** status, waiting for approval.
 +
-image::../assets/imagesjob_approval.png[Job waiting for approval, opts="border"]
+image::../assets/images/job_approval.png[Job waiting for approval, opts="border"]
 
 . **Approve the workflow.**
 +
