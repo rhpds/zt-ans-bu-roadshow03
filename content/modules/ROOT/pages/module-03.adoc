@@ -1,5 +1,5 @@
 = Lab Guide: Proactive Network Operations with EDA
-:toc:
+:notoc:
 :toc-title: Table of Contents
 :sectnums:
 :icons: font
