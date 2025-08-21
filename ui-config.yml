@@ -7,10 +7,10 @@ antora:
     - name: module-01
       label: "The day the application died"
       solveButton: false
+    # - name: module-02   #### Insights not working - need to recreate this
+    #   label: "All your vulnerabilities are belong to us"
+    #   solveButton: false
     - name: module-02
-      label: "All your vulnerabilities are belong to us"
-      solveButton: false
-    - name: module-03
       label: "Oh no whats next, the network ?"
       solveButton: false
 
@@ -26,6 +26,6 @@ tabs:
   - name: ServiceNow
     url: https://ansible.service-now.com
     external: true
-  - name: Red Hat Insights
-    url: https://console.redhat.com
-    external: true
+  # - name: Red Hat Insights
+  #   url: https://console.redhat.com
+  #   external: true
