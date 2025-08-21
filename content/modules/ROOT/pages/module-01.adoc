@@ -66,6 +66,7 @@ images::token-sean.png[Pasting the API token into S.E.A.N, opts="border"]
 
 **Note** all the following jobs can manually be run on the Ansible Automation controller, you can find these under Templates, if you do not want to use S.E.A.N
 
+
 . **Simulate the application failure.**
 +
 Select option **1** to run the `Break Web-Application` job. You can navigate to the `aap` tab and view the job running under **Automation Execution** → **Jobs**.
