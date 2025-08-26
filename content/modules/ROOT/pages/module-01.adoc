@@ -29,7 +29,7 @@ Last week, your streaming service was disrupted by an application failure that t
 
 . **Verify the web application is working.**
 +
-Navigate to the `Web-App` tab in your lab environment. You should see the application is online and working correctly.
+Navigate to the `Webapp` tab in your lab environment. You should see the application is online and working correctly.
 
 . **Meet the "Co-Worker Simulator".**
 +
@@ -75,7 +75,7 @@ images::break-web.png[Break Web-Application job running, opts="border"]
 
 . **Verify the application is broken.**
 +
-Once the job completes, refresh the `Web-App` tab. You should now see an error message.
+Once the job completes, refresh the `Webapp` tab. You should now see an error message.
 +
 image::broken-app.png[Web application showing an error, opts="border"]
 
