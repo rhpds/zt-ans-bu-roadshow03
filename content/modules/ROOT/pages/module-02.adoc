@@ -23,6 +23,7 @@ Your network engineers have created playbooks to assist with troubleshooting. Yo
 Navigate to your `aap` tab. Go to **Automation Decisions** → **Rulebook Activations**. Click **Create rulebook activation** and configure it with the following details:
 +
 * **Name:** `Network Event`
+* **Organization:** `Default`
 * **Description:** `Rulebook to listen to Network Telemetry`
 * **Project:** `Roadshow`
 * **Rulebook:** `network_stats.yml`
