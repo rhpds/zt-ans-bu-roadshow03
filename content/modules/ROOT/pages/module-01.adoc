@@ -40,13 +40,13 @@ To simulate the failure accurately, you will use a tool named S.E.A.N. This simu
 * **A**: Antisocial API
 * **N**: Network Nullifier
 +
-images::sean.png[S.E.A.N - The Co-Worker Simulator, opts="border"]
+image::sean.png[S.E.A.N - The Co-Worker Simulator, opts="border"]
 
 . **Create an API token in AAP.**
 +
 Navigate to your `aap` tab. From the main menu, go to **Access Management** → **Users**. Select the `admin` user and click on the **Tokens** tab.
 +
-images::where-token.png[Location of the Tokens tab for a user, opts="border"]
+image::where-token.png[Location of the Tokens tab for a user, opts="border"]
 +
 Click the **Create token** button and configure it with the following details:
 +
@@ -63,7 +63,7 @@ In addition it is recommended to copy the token using right-click and dont rely 
 +
 Navigate to the `S.E.A.N` tab. When prompted, paste the API token into the terminal. Once authenticated, a menu of options will appear.
 +
-images::token-sean.png[Pasting the API token into S.E.A.N, opts="border"]
+image::token-sean.png[Pasting the API token into S.E.A.N, opts="border"]
 
 **Note** all the following jobs can manually be run on the Ansible Automation controller, you can find these under Templates, if you do not want to use S.E.A.N
 
@@ -72,7 +72,7 @@ images::token-sean.png[Pasting the API token into S.E.A.N, opts="border"]
 +
 Select option **1** to run the `Break Web-Application` job. You can navigate to the `aap` tab and view the job running under **Automation Execution** → **Jobs**.
 +
-images::break-web.png[Break Web-Application job running, opts="border"]
+image::break-web.png[Break Web-Application job running, opts="border"]
 
 . **Verify the application is broken.**
 +
