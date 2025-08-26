@@ -57,6 +57,7 @@ Click the **Create token** button and configure it with the following details:
 Click **Create token** and copy the generated token.
 
 WARNING: You will only see this token once. Be sure to copy it, as you will need it to authenticate S.E.A.N.
+In addition it is recommended to copy the token using right-click and dont rely on the copy function in the lab.
 
 . **Authenticate the S.E.A.N simulator.**
 +
