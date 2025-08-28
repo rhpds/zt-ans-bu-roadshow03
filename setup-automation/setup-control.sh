@@ -146,18 +146,18 @@ tee /tmp/setup.yml << EOF
         SN_PASSWORD: Ans1ble123!
         SN_HOST: https://ansible.service-now.com
 
-  - name: (EXECUTION) add Insights credential
-    ansible.controller.credential:
-      name: 'Insights'
-      organization: Default
-      credential_type: Insights
-      controller_host: "https://{{ ansible_host }}"
-      controller_username: admin
-      controller_password: ansible123!
-      validate_certs: false
-      inputs:
-        username: rhel
-        password: ansible123!
+  # - name: (EXECUTION) add Insights credential
+  #   ansible.controller.credential:
+  #     name: 'Insights'
+  #     organization: Default
+  #     credential_type: Insights
+  #     controller_host: "https://{{ ansible_host }}"
+  #     controller_username: admin
+  #     controller_password: ansible123!
+  #     validate_certs: false
+  #     inputs:
+  #       username: rhel
+  #       password: ansible123!
 
 ###############EE###############
 
@@ -795,19 +795,19 @@ tee /tmp/setup.yml << EOF
       controller_password: ansible123!
       validate_certs: false
 
-  - name: Add Insights Project
-    ansible.controller.project:
-      name: "Insights"
-      description: "Red Hat Insights"
-      organization: "Default"
-      scm_type: insights
- #     scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git
-      credential: Insights
-      state: present
-      controller_host: "https://localhost"
-      controller_username: admin
-      controller_password: ansible123!
-      validate_certs: false
+ #  - name: Add Insights Project
+ #    ansible.controller.project:
+ #      name: "Insights"
+ #      description: "Red Hat Insights"
+ #      organization: "Default"
+ #      scm_type: insights
+ # #     scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git
+ #      credential: Insights
+ #      state: present
+ #      controller_host: "https://localhost"
+ #      controller_username: admin
+ #      controller_password: ansible123!
+ #      validate_certs: false
 
 EOF
 
