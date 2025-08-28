@@ -21,6 +21,12 @@ While your streaming platform is now easier to provision and configure, failures
 | `admin` / `ansible123!` | `aap-roadshow` / `Ans1ble123!`
 |===
 
+[cols="1,2a"]
+|===
+| Note | `You might need to change the language on AAP if your browser has multiple languages enabled.`
+| Repo | `https://github.com/ansible-tmm/aap25-roadshow`
+|===
+
 ---
 
 == Simulating an Application Failure
