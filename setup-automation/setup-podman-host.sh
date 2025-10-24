@@ -22,7 +22,7 @@ subscription-manager status
 if [ $? -ne 0 ]; then
     retry "subscription-manager register --org=${SATELLITE_ORG} --activationkey=${SATELLITE_ACTIVATIONKEY}"
 fi
-retry "install yum-utils jq podman wget git ansible-core nano -y"
+retry "dnf install yum-utils jq podman wget git ansible-core nano -y"
 
 setenforce 0
 firewall-cmd --permanent --add-port=2000:2003/tcp
