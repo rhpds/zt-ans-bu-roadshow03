@@ -129,3 +129,7 @@ Go directly to the `aap` tab and watch the **Automation Execution** → **Jobs**
 Event-Driven Ansible detected that the `httpd` service failed to restart during the "break" job and automatically triggered the "restore" job to remediate the issue, significantly reducing downtime without any human intervention.
 
 v0.0.3
+
+== Troubleshooting
+
+If you have encountered an issue or have noticed something not quite right, please link:https://github.com/ansible/workshops/issues/new?labels=controller-101&title=Issue+with+Roadshow03&assignees=nmartins0611[open an issue on GitHub].
