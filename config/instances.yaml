@@ -78,12 +78,15 @@ containers:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_INTERNAL://broker:29092
       KAFKA_BROKER_ID: "1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     volumeMounts:
        - name: kafka-varlog
          mountPath: /var/log/kafka/
     volumes:
       - name: kafka-varlog
         emptyDir: {}
+    commands:
+        - kafka-topics --create --if-not-exists --bootstrap-server broker:9092 --replication-factor 1 --partitions 1 --topic network
     memory: 4Gi
     services:
       - name: broker
