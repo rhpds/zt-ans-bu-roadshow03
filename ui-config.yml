@@ -26,6 +26,8 @@ tabs:
   - name: ServiceNow
     url: https://ansible.service-now.com
     external: true
+  - name: "TERM"
+    url: /wetty_control
   # - name: Red Hat Insights
   #   url: https://console.redhat.com
   #   external: true
