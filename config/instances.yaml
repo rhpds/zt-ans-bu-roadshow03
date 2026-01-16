@@ -85,8 +85,6 @@ containers:
     volumes:
       - name: kafka-varlog
         emptyDir: {}
-    commands: 
-        - /bin/kafka-topics --create --if-not-exists --bootstrap-server broker:9092 --replication-factor 1 --partitions 1 --topic network
     memory: 4Gi
     services:
       - name: broker
