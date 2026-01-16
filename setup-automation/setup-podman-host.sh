@@ -120,17 +120,21 @@ bash -c "$(curl -sL https://get-gnmic.kmrd.dev)"
 
 #################################################################
 
-cat <<EOF | tee /etc/yum.repos.d/influxdb.repo
-[influxdb]
-name = InfluxDB Repository - RHEL \$releasever
-baseurl = https://repos.influxdata.com/rhel/\$releasever/\$basearch/stable
-enabled = 1
-gpgcheck = 1
-gpgkey = https://repos.influxdata.com/influxdata-archive_compat.key
+# cat <<EOF | tee /etc/yum.repos.d/influxdb.repo
+# [influxdb]
+# name = InfluxDB Repository - RHEL \$releasever
+# baseurl = https://repos.influxdata.com/rhel/\$releasever/\$basearch/stable
+# enabled = 1
+# gpgcheck = 1
+# gpgkey = https://repos.influxdata.com/influxdata-archive_compat.key
 
-EOF
+# EOF
 
-dnf install telegraf -y
+# dnf install telegraf -y
+
+wget https://dl.influxdata.com/telegraf/releases/telegraf-1.36.2-1.x86_64.rpm
+sudo yum localinstall telegraf-1.36.2-1.x86_64.rpm -y
+
 
 cat <<EOF | tee /etc/telegraf/telegraf.conf
 
@@ -233,7 +237,8 @@ type=rpm-md
 
 EOF
 
-sudo yum install filebeat -y
+#sudo yum install filebeat -y
+sudo yum install filebeat-8.18.8 -y
 
 cat <<EOF | tee  /etc/filebeat/filebeat.yml 
 
