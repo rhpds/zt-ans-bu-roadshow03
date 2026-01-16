@@ -19,6 +19,8 @@ tabs:
     url: https://control-${guid}.${domain}/
     external: false
   - name: ">_ S.E.A.N"
+    url: /wetty_podman-host
+  - name: ">_ S.E.A.N"
     url: /wetty_sean
   - name: Webapp
     url: https://podman-host-${guid}.${domain}/index.html
