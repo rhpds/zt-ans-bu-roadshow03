@@ -238,7 +238,8 @@ type=rpm-md
 
 EOF
 
-sudo yum install filebeat -y
+#sudo yum install filebeat -y
+sudo yum install filebeat-8.18.8 -y
 
 cat <<EOF | tee  /etc/filebeat/filebeat.yml 
 
