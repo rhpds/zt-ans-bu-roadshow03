@@ -795,19 +795,19 @@ tee /tmp/setup.yml << EOF
       controller_password: ansible123!
       validate_certs: false
 
-  - name: Add Insights Project
-    ansible.controller.project:
-      name: "Insights"
-      description: "Red Hat Insights"
-      organization: "Default"
-      scm_type: insights
- #     scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git
-      credential: Insights
-      state: present
-      controller_host: "https://localhost"
-      controller_username: admin
-      controller_password: ansible123!
-      validate_certs: false
+ #  - name: Add Insights Project
+ #    ansible.controller.project:
+ #      name: "Insights"
+ #      description: "Red Hat Insights"
+ #      organization: "Default"
+ #      scm_type: insights
+ # #     scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git
+ #      credential: Insights
+ #      state: present
+ #      controller_host: "https://localhost"
+ #      controller_username: admin
+ #      controller_password: ansible123!
+ #      validate_certs: false
 
 EOF
 
