@@ -135,7 +135,7 @@ bash -c "$(curl -sL https://get-gnmic.kmrd.dev)"
 ####
 
 wget https://dl.influxdata.com/telegraf/releases/telegraf-1.36.2-1.x86_64.rpm
-sudo yum localinstall telegraf-1.36.2-1.x86_64.rpm
+sudo yum localinstall telegraf-1.36.2-1.x86_64.rpm -y
 
 cat <<EOF | tee /etc/telegraf/telegraf.conf
 
