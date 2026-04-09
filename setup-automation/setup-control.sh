@@ -831,6 +831,16 @@ export ANSIBLE_INVENTORY_UNPARSED_WARNING=False
 ANSIBLE_COLLECTIONS_PATH=/root/ansible-automation-platform-containerized-setup/collections/ansible_collections:/root/.ansible/collections/ansible_collections ansible-playbook -i /tmp/inventory /tmp/setup.yml
 playbook_rc=$?
 
+# Populate hackbot.sh with actual template IDs from this provision
+HACKBOT="/home/rhel/roadshow/lab-resources/hackbot.sh"
+if [ $playbook_rc -eq 0 ] && [ -f "$HACKBOT" ]; then
+  get_id() { curl -sk "https://localhost/api/controller/v2/job_templates/?name=$(echo $1 | sed 's/ /+/g')" -u admin:ansible123! | python3 -c "import sys,json; print(json.load(sys.stdin)['results'][0]['id'])" 2>/dev/null; }
+  sed -i "s/__BREAK_WEB_ID__/$(get_id 'Break Web-Application')/" "$HACKBOT"
+  sed -i "s/__RESTORE_WEB_ID__/$(get_id 'Restore Web-Application')/" "$HACKBOT"
+  sed -i "s/__DISABLE_PORT_ID__/$(get_id 'Disable Port')/" "$HACKBOT"
+  sed -i "s/__MAKE_PORT_ID__/$(get_id 'Make Port Active')/" "$HACKBOT"
+fi
+
 # Restart task container so it picks up the updated settings.py (slirp4netns removal)
 # This ensures EE jobs use pasta networking instead of broken slirp4netns
 su - rhel -c 'podman stop automation-controller-task && podman start automation-controller-task'
