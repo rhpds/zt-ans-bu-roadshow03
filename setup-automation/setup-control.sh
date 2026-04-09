@@ -1,4 +1,6 @@
 #!/bin/bash
+# Fix AAP 2.6 EE networking: remove slirp4netns override so podman uses pasta (default)
+sed -i 's/"--network", "slirp4netns:enable_ipv6=true", //' /home/rhel/aap/controller/etc/settings.py
 
 systemctl stop systemd-tmpfiles-setup.service
 systemctl disable systemd-tmpfiles-setup.service
@@ -824,4 +826,13 @@ chmod -R 777 /home/rhel/roadshow
 chmod +x /home/rhel/roadshow/lab-resources/hackbot.sh
 sudo chown rhel:rhel /home/rhel/roadshow/lab-resources/hackbot.sh
 
-ANSIBLE_COLLECTIONS_PATH=/tmp/ansible-automation-platform-containerized-setup-bundle-2.5-9-x86_64/collections/:/root/.ansible/collections/ansible_collections/ ansible-playbook -i /tmp/inventory /tmp/setup.yml
+export ANSIBLE_LOCALHOST_WARNING=False
+export ANSIBLE_INVENTORY_UNPARSED_WARNING=False
+ANSIBLE_COLLECTIONS_PATH=/root/ansible-automation-platform-containerized-setup/collections/ansible_collections ansible-playbook -i /tmp/inventory /tmp/setup.yml
+playbook_rc=$?
+
+# Restart task container so it picks up the updated settings.py (slirp4netns removal)
+# This ensures EE jobs use pasta networking instead of broken slirp4netns
+su - rhel -c 'podman stop automation-controller-task && podman start automation-controller-task'
+
+exit $playbook_rc
