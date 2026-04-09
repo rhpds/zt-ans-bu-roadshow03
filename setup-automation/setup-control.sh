@@ -828,7 +828,7 @@ sudo chown rhel:rhel /home/rhel/roadshow/lab-resources/hackbot.sh
 
 export ANSIBLE_LOCALHOST_WARNING=False
 export ANSIBLE_INVENTORY_UNPARSED_WARNING=False
-ANSIBLE_COLLECTIONS_PATH=/root/ansible-automation-platform-containerized-setup/collections/ansible_collections ansible-playbook -i /tmp/inventory /tmp/setup.yml
+ANSIBLE_COLLECTIONS_PATH=/root/ansible-automation-platform-containerized-setup/collections/ansible_collections:/root/.ansible/collections/ansible_collections ansible-playbook -i /tmp/inventory /tmp/setup.yml
 playbook_rc=$?
 
 # Restart task container so it picks up the updated settings.py (slirp4netns removal)
