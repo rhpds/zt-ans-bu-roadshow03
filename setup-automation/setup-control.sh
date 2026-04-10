@@ -749,7 +749,7 @@ tee /tmp/setup.yml << EOF
       name: "AAP"
       description: "To execute jobs from EDA"
       inputs:
-        host: "https://control.ansible.workshop/api/controller/"
+        host: "https://localhost/api/controller/"
         username: "admin"
         password: "ansible123!"
       credential_type_name: "Red Hat Ansible Automation Platform"

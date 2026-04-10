@@ -102,11 +102,13 @@ Click **Create rulebook activation** and configure it with the following details
 +
 * **Name:** `Web-App Event`
 * **Description:** `Rulebook to listen to configuration issues`
+* **Organization:** `Default`
 * **Project:** `Roadshow`
 * **Rulebook:** `Webapp.yml`
-* **Decision environment:** `Web Server`
 * **Credential:** `AAP`
+* **Decision environment:** `Web Server`
 * **Restart Policy:** `On failure`
+* **Log Level:** `Error`
 +
 Click **Create rulebook activation**.
 
