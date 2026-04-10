@@ -1,7 +1,6 @@
 = Lab Guide: Proactive Network Operations with EDA
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
 _A guide to using Event-Driven Ansible to move beyond simple remediation and proactively gather information and automate mundane network tasks._

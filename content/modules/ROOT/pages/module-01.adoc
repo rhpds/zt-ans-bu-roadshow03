@@ -1,7 +1,6 @@
 = Lab Guide: Operational Efficiency with Event-Driven Ansible
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
 _A guide to using the advanced features of Ansible Automation Platform, like Event-Driven Ansible, to reduce resolution time and prevent outages._

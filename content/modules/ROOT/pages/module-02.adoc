@@ -1,7 +1,6 @@
 = Lab Guide: Integrating AAP with Red Hat Insights
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
 _A guide to using Ansible Automation Platform to connect to Red Hat Insights, remediate vulnerabilities, and report on CVEs._
