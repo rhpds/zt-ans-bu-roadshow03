@@ -36,7 +36,7 @@ image::insights-creds.png[Insights credential configuration page, opts="border"]
 +
 Once the credential is saved, navigate to **Automation Execution** → **Projects** and click the sync icon for the **Insights** project. The project should now synchronize successfully.
 +
-image::images/insights-sync.png[Synchronizing the Insights project, opts="border"]
+image::insights-sync.png[Synchronizing the Insights project, opts="border"]
 
 . **Register a server with Red Hat Insights.**
 +

@@ -92,8 +92,7 @@ Simulating the failure was useful, but now let's prevent it from causing downtim
 . **Navigate to Rulebook Activations.**
 +
 In your `aap` tab, go to **Automation Decisions** → **Rulebook Activations**. This is where you can configure Event-Driven Ansible to listen for specific events and trigger automated responses.
-+
-image::rules.png[Rulebook Activations page, opts="border"]
+
 
 . **Create a new rulebook activation.**
 +

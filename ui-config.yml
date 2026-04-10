@@ -10,7 +10,7 @@ antora:
     - name: module-02  ## Insights not working - need to fix
       label: "All your vulnerabilities are belong to us"
       solveButton: false
-    - name: module-02
+    - name: module-03
       label: "Oh no whats next, the network ?"
       solveButton: false
 
