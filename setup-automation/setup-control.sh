@@ -148,18 +148,19 @@ tee /tmp/setup.yml << EOF
         SN_PASSWORD: Ans1ble123!
         SN_HOST: https://ansible.service-now.com
 
-  - name: (EXECUTION) add Insights credential
-    ansible.controller.credential:
-      name: 'Insights'
-      organization: Default
-      credential_type: Insights
-      controller_host: "https://{{ ansible_host }}"
-      controller_username: admin
-      controller_password: ansible123!
-      validate_certs: false
-      inputs:
-        username: rhel
-        password: ansible123!
+  ## Insights/Lightspeed disabled — remediation workflow requires RHC + elevated RBAC
+  # - name: (EXECUTION) add Insights credential
+  #   ansible.controller.credential:
+  #     name: 'Insights'
+  #     organization: Default
+  #     credential_type: Insights
+  #     controller_host: "https://{{ ansible_host }}"
+  #     controller_username: admin
+  #     controller_password: ansible123!
+  #     validate_certs: false
+  #     inputs:
+  #       username: rhel
+  #       password: ansible123!
 
 ###############EE###############
 
@@ -557,87 +558,89 @@ tee /tmp/setup.yml << EOF
       controller_password: ansible123!
       validate_certs: false
 
-  - name: Add Register Insights Template
-    ansible.controller.job_template:
-      name: "Insights for RHEL"
-      job_type: "run"
-      organization: "Default"
-      inventory: "Video Platform Inventory"
-      project: "Roadshow"
-      playbook: "playbooks/section03/register_system.yml"
-      execution_environment: "RHEL EE"
-      survey_enabled: true
-      survey_spec:
-           {
-             "name": "Red Hat Insights Credentials",
-             "description": "Please provide your details for Insights",
-             "spec": [
-               {
-    	          "type": "text",
-    	          "question_name": "Please Provide your username:",
-              	"question_description": "Insights Username",
-              	"variable": "rhsm_username",
-              	"required": true,
-               },
-               {
-    	          "type": "password",
-    	          "question_name": "Please Provide your password:",
-              	"question_description": "Insights Password",
-              	"variable": "rhsm_password",
-              	"required": true,
-               }
-             ]
-           }
-      credentials:
-        - "Application Nodes"
-      state: "present"
-      controller_host: "https://localhost"
-      controller_username: admin
-      controller_password: ansible123!
-      validate_certs: false
+  ## Insights/Lightspeed disabled — remediation workflow requires RHC + elevated RBAC
+  # - name: Add Register Insights Template
+  #   ansible.controller.job_template:
+  #     name: "Insights for RHEL"
+  #     job_type: "run"
+  #     organization: "Default"
+  #     inventory: "Video Platform Inventory"
+  #     project: "Roadshow"
+  #     playbook: "playbooks/section03/register_system.yml"
+  #     execution_environment: "RHEL EE"
+  #     survey_enabled: true
+  #     survey_spec:
+  #          {
+  #            "name": "Red Hat Insights Credentials",
+  #            "description": "Please provide your details for Insights",
+  #            "spec": [
+  #              {
+  #   	          "type": "text",
+  #   	          "question_name": "Please Provide your username:",
+  #             	"question_description": "Insights Username",
+  #             	"variable": "rhsm_username",
+  #             	"required": true,
+  #              },
+  #              {
+  #   	          "type": "password",
+  #   	          "question_name": "Please Provide your password:",
+  #             	"question_description": "Insights Password",
+  #             	"variable": "rhsm_password",
+  #             	"required": true,
+  #              }
+  #            ]
+  #          }
+  #     credentials:
+  #       - "Application Nodes"
+  #     state: "present"
+  #     controller_host: "https://localhost"
+  #     controller_username: admin
+  #     controller_password: ansible123!
+  #     validate_certs: false
 
-  - name: Add CVE Template
-    ansible.controller.job_template:
-      name: "CVE Advisory"
-      job_type: "run"
-      organization: "Default"
-      inventory: "Video Platform Inventory"
-      project: "Roadshow"
-      playbook: "playbooks/section03/cve_details.yml"
-      execution_environment: "RHEL EE"
-      survey_enabled: true
-      survey_spec:
-           {
-             "name": "Red Hat Insights Credentials",
-             "description": "Please provide your details for Insights",
-             "spec": [
-               {
-    	          "type": "text",
-    	          "question_name": "Please Provide your username:",
-              	"question_description": "Insights Username",
-              	"variable": "rhsm_username",
-              	"required": true,
-               },
-               {
-    	          "type": "password",
-    	          "question_name": "Please Provide your password:",
-              	"question_description": "Insights Password",
-              	"variable": "rhsm_password",
-              	"required": true,
-               },
-               {
-                "type": "text",
-    	          "question_name": "Please provide the Advisory ID",
-              	"question_description": "CVE Advisory ID",
-              	"variable": "advisory_id",
-              	"required": true,
-               }
-             ]
-           }
-      credentials:
-        - "ServiceNow"
-      state: "present"
-      controller_host: "https://localhost"
+  ## Insights/Lightspeed disabled — remediation workflow requires RHC + elevated RBAC
+  # - name: Add CVE Template
+  #   ansible.controller.job_template:
+  #     name: "CVE Advisory"
+  #     job_type: "run"
+  #     organization: "Default"
+  #     inventory: "Video Platform Inventory"
+  #     project: "Roadshow"
+  #     playbook: "playbooks/section03/cve_details.yml"
+  #     execution_environment: "RHEL EE"
+  #     survey_enabled: true
+  #     survey_spec:
+  #          {
+  #            "name": "Red Hat Insights Credentials",
+  #            "description": "Please provide your details for Insights",
+  #            "spec": [
+  #              {
+  #   	          "type": "text",
+  #   	          "question_name": "Please Provide your username:",
+  #             	"question_description": "Insights Username",
+  #             	"variable": "rhsm_username",
+  #             	"required": true,
+  #              },
+  #              {
+  #   	          "type": "password",
+  #   	          "question_name": "Please Provide your password:",
+  #             	"question_description": "Insights Password",
+  #             	"variable": "rhsm_password",
+  #             	"required": true,
+  #              },
+  #              {
+  #               "type": "text",
+  #   	          "question_name": "Please provide the Advisory ID",
+  #             	"question_description": "CVE Advisory ID",
+  #             	"variable": "advisory_id",
+  #             	"required": true,
+  #              }
+  #            ]
+  #          }
+  #     credentials:
+  #       - "ServiceNow"
+  #     state: "present"
+  #     controller_host: "https://localhost"
       controller_username: admin
       controller_password: ansible123!
       validate_certs: false
@@ -797,19 +800,20 @@ tee /tmp/setup.yml << EOF
       controller_password: ansible123!
       validate_certs: false
 
-  - name: Add Insights Project
-    ansible.controller.project:
-      name: "Insights"
-      description: "Red Hat Insights"
-      organization: "Default"
-      scm_type: insights
- #     scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git
-      credential: Insights
-      state: present
-      controller_host: "https://localhost"
-      controller_username: admin
-      controller_password: ansible123!
-      validate_certs: false
+  ## Insights/Lightspeed disabled — remediation workflow requires RHC + elevated RBAC
+  # - name: Add Insights Project
+  #   ansible.controller.project:
+  #     name: "Insights"
+  #     description: "Red Hat Insights"
+  #     organization: "Default"
+  #     scm_type: insights
+  #     scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git
+  #     credential: Insights
+  #     state: present
+  #     controller_host: "https://localhost"
+  #     controller_username: admin
+  #     controller_password: ansible123!
+  #     validate_certs: false
 
 EOF
 
