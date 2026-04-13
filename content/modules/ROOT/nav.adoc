@@ -1,3 +1,3 @@
 * xref:module-01.adoc[1. The day the application died]
-* xref:module-02.adoc[2. All your vulnerabilities are belong to us]
-* xref:module-03.adoc[3. Oh no whats next, the network?]
+// module-02 disabled — Lightspeed remediation requires RHC + elevated RBAC
+* xref:module-03.adoc[2. Oh no whats next, the network?]
