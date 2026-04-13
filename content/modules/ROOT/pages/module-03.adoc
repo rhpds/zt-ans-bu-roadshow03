@@ -22,13 +22,14 @@ Your network engineers have created playbooks to assist with troubleshooting. Yo
 Navigate to your `aap` tab. Go to **Automation Decisions** → **Rulebook Activations**. Click **Create rulebook activation** and configure it with the following details:
 +
 * **Name:** `Network Event`
-* **Organization:** `Default`
 * **Description:** `Rulebook to listen to Network Telemetry`
+* **Organization:** `Default`
 * **Project:** `Roadshow`
 * **Rulebook:** `network_stats.yml`
-* **Decision environment:** `Network Telemetry`
 * **Credential:** `AAP`
+* **Decision environment:** `Network Telemetry`
 * **Restart Policy:** `On failure`
+* **Log Level:** `Error`
 +
 Click **Create rulebook activation**. Once running, this rulebook will listen for multiple network conditions.
 

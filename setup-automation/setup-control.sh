@@ -641,9 +641,9 @@ tee /tmp/setup.yml << EOF
   #       - "ServiceNow"
   #     state: "present"
   #     controller_host: "https://localhost"
-      controller_username: admin
-      controller_password: ansible123!
-      validate_certs: false
+  #     controller_username: admin
+  #     controller_password: ansible123!
+  #     validate_certs: false
 
 ###############WORKFLOW PORT STATUS###############
 

@@ -92,13 +92,13 @@ sleep 60
 var1=$(podman inspect ceos1 | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
 var2=$(podman inspect ceos2 | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
 var3=$(podman inspect ceos3 | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
-var4=$(podman inspect mattermost | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
+#var4=$(podman inspect mattermost | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
 
 ## Build local host etc/hosts
 echo "$var1" ceos1 >> /etc/hosts
 echo "$var2" ceos2 >> /etc/hosts
 echo "$var3" ceos3 >> /etc/hosts
-echo "$var4" mattermost >> /etc/hosts
+#echo "$var4" mattermost >> /etc/hosts
 
 
 
@@ -125,8 +125,7 @@ cat <<EOF | tee /etc/yum.repos.d/influxdb.repo
 name = InfluxDB Repository - RHEL \$releasever
 baseurl = https://repos.influxdata.com/rhel/\$releasever/\$basearch/stable
 enabled = 1
-gpgcheck = 1
-gpgkey = https://repos.influxdata.com/influxdata-archive_compat.key
+gpgcheck = 0
 
 EOF
 
