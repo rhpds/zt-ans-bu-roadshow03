@@ -6,20 +6,14 @@ antora:
   modules:
     - name: module-01
       label: "The day the application died"
-      solveButton: true
-      scripts:
-        - solve
-        - validation
+      solveButton: false
     ## module-02 disabled — Insights remediation workflow replaced by Lightspeed which requires RHC agent + elevated RBAC roles
     # - name: module-02
     #   label: "All your vulnerabilities are belong to us"
     #   solveButton: false
     - name: module-03
       label: "Oh no whats next, the network ?"
-      solveButton: true
-      scripts:
-        - solve
-        - validation
+      solveButton: false
 
 tabs:
   - name: aap

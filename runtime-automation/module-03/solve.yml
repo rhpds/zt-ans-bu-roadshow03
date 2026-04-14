@@ -66,16 +66,7 @@
     force_basic_auth: true
     validate_certs: false
     body_format: json
-    body:
-      name: "Network Event"
-      description: "Rulebook to listen to Network Telemetry"
-      organization_id: "{{ r_eda_org.json.results[0].id }}"
-      project_id: "{{ r_eda_project.json.results[0].id }}"
-      rulebook_id: "{{ r_eda_rulebook.json.results[0].id }}"
-      eda_credential_id: "{{ r_eda_cred.json.results[0].id }}"
-      decision_environment_id: "{{ r_eda_de.json.results[0].id }}"
-      restart_policy: "on-failure"
-      log_level: "error"
+    body: "{{ {'name': 'Network Event', 'description': 'Rulebook to listen to Network Telemetry', 'organization_id': r_eda_org.json.results[0].id | int, 'project_id': r_eda_project.json.results[0].id | int, 'rulebook_id': r_eda_rulebook.json.results[0].id | int, 'eda_credentials': [r_eda_cred.json.results[0].id | int], 'decision_environment_id': r_eda_de.json.results[0].id | int, 'restart_policy': 'on-failure', 'log_level': 'error'} }}"
     status_code: [200, 201]
   when: r_existing_activation.json.count == 0
   register: r_new_activation
