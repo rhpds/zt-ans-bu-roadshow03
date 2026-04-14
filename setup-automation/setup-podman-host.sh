@@ -51,9 +51,9 @@ podman network create net3
 podman network create loop
 podman network create management
 
-podman run -d --restart=always --network management --memory=4g --name=ceos1 --privileged -v /opt/ceos-setup/sw01/sw01:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6031:6030 -p 2001:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##
-podman run -d --restart=always --network management --memory=4g --name=ceos2 --privileged -v /opt/ceos-setup/sw02/sw02:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6032:6030 -p 2002:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
-podman run -d --restart=always --network management --memory=4g --name=ceos3 --privileged -v /opt/ceos-setup/sw03/sw03:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6033:6030 -p 2003:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
+podman run -d --network management --memory=4g --name=ceos1 --privileged -v /opt/ceos-setup/sw01/sw01:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6031:6030 -p 2001:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##
+podman run -d --network management --memory=4g --name=ceos2 --privileged -v /opt/ceos-setup/sw02/sw02:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6032:6030 -p 2002:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
+podman run -d --network management --memory=4g --name=ceos3 --privileged -v /opt/ceos-setup/sw03/sw03:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6033:6030 -p 2003:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
 
 
 # ## Attach Networks
@@ -110,16 +110,38 @@ UNIT
 
 systemctl enable update-ceos-hosts.service
 
-## Create a startup script that starts ceos containers and waits for SSH to be ready
+## Create a startup script that recreates ceos containers with proper port forwarding
 cat <<'CEOS_SCRIPT' > /usr/local/bin/start-ceos-containers.sh
 #!/bin/bash
-# Start each ceos container
+IMAGE="quay.io/nmartins/ceoslab-rh"
+COMMON_ENV="-e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman"
+COMMON_SYSENV="systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman"
+
+# Remove old containers (port proxy is stale after reboot)
 for name in ceos1 ceos2 ceos3; do
-    podman start $name || echo "WARNING: failed to start $name"
+    podman stop $name 2>/dev/null
+    podman rm $name 2>/dev/null
 done
 
-# Wait for SSH to be available on each container's mapped port before exiting.
-# This ensures AAP jobs don't try to connect before EOS has fully booted.
+# Recreate containers with fresh port forwarding
+podman run -d --network management --memory=4g --name=ceos1 --privileged -v /opt/ceos-setup/sw01/sw01:/mnt/flash/startup-config $COMMON_ENV -p 6031:6030 -p 2001:22/tcp $IMAGE /sbin/init $COMMON_SYSENV
+podman run -d --network management --memory=4g --name=ceos2 --privileged -v /opt/ceos-setup/sw02/sw02:/mnt/flash/startup-config $COMMON_ENV -p 6032:6030 -p 2002:22/tcp $IMAGE /sbin/init $COMMON_SYSENV
+podman run -d --network management --memory=4g --name=ceos3 --privileged -v /opt/ceos-setup/sw03/sw03:/mnt/flash/startup-config $COMMON_ENV -p 6033:6030 -p 2003:22/tcp $IMAGE /sbin/init $COMMON_SYSENV
+
+# Reattach additional networks
+podman network connect loop ceos1
+podman network connect net1 ceos1
+podman network connect net3 ceos1
+
+podman network connect loop ceos2
+podman network connect net1 ceos2
+podman network connect net2 ceos2
+
+podman network connect loop ceos3
+podman network connect net2 ceos3
+podman network connect net3 ceos3
+
+# Wait for SSH to be available on each container's mapped port
 declare -A ports=([ceos1]=2001 [ceos2]=2002 [ceos3]=2003)
 for name in ceos1 ceos2 ceos3; do
     port=${ports[$name]}
