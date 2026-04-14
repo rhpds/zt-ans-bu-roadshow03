@@ -29,23 +29,19 @@ firewall-cmd --permanent --add-port=2000:2003/tcp
 firewall-cmd --permanent --add-port=6030:6033/tcp
 firewall-cmd --permanent --add-port=8065:8065/tcp
 firewall-cmd --reload
-# export RTPASS=ansible
-# echo "ansible" | passwd root --stdin
 
 # Grab sample switch config
-rm -rf /tmp/setup ## Troubleshooting step
+rm -rf /opt/ceos-setup
 
 ansible-galaxy collection install community.general
 
-mkdir /tmp/setup/
+mkdir /opt/ceos-setup/
 
-git clone https://github.com/nmartins0611/Instruqt_netops.git /tmp/setup/
+git clone https://github.com/nmartins0611/Instruqt_netops.git /opt/ceos-setup/
 
 ### Configure containers
 
 podman pull quay.io/nmartins/ceoslab-rh
-#podman pull docker.io/nats
-#podman run --name mattermost-preview -d --publish 8065:8065 mattermost/mattermost-preview
 
 ## Create Networks
 
@@ -55,68 +51,112 @@ podman network create net3
 podman network create loop
 podman network create management
 
-# Create mattermost container
-#podman run -d --network management --name=mattermost --privileged --publish 8065:8065 mattermost/mattermost-preview:7.8.6
-
-##docker pull mattermost/platform:6.5.0
-
-# podman create --name=ceos1 --privileged -v /tmp/setup/sw01/sw01:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=docker -p 9092:9092 -p 6031:6030 -p 2001:22/tcp -i -t quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman
-podman run -d --network management --memory=4g --name=ceos1 --privileged -v /tmp/setup/sw01/sw01:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6031:6030 -p 2001:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##
-podman run -d --network management --memory=4g --name=ceos2 --privileged -v /tmp/setup/sw02/sw02:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6032:6030 -p 2002:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
-podman run -d --network management --memory=4g --name=ceos3 --privileged -v /tmp/setup/sw03/sw03:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6033:6030 -p 2003:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
-#podman run -d -it --network management --name=web01 --systemd=always --ip=10.0.0.10 -p 8080:80 quay.io/nmartins/httpd
+podman run -d --restart=always --network management --memory=4g --name=ceos1 --privileged -v /opt/ceos-setup/sw01/sw01:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6031:6030 -p 2001:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##
+podman run -d --restart=always --network management --memory=4g --name=ceos2 --privileged -v /opt/ceos-setup/sw02/sw02:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6032:6030 -p 2002:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
+podman run -d --restart=always --network management --memory=4g --name=ceos3 --privileged -v /opt/ceos-setup/sw03/sw03:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6033:6030 -p 2003:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
 
 
 # ## Attach Networks
 podman network connect loop ceos1
 podman network connect net1 ceos1
 podman network connect net3 ceos1
-#podman network connect management ceos1
 
 podman network connect loop ceos2
 podman network connect net1 ceos2
 podman network connect net2 ceos2
-#podman network connect management ceos2
 
 podman network connect loop ceos3
 podman network connect net2 ceos3
 podman network connect net3 ceos3
-#podman network connect management ceos3
-
-# podman network connect management mattermost
 
 ## Wait for Switches to load conf
 sleep 60
 
-# ## Get management IP
-var1=$(podman inspect ceos1 | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
-var2=$(podman inspect ceos2 | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
-var3=$(podman inspect ceos3 | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
-#var4=$(podman inspect mattermost | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
+# ## Create a script to refresh ceos management IPs in /etc/hosts on every boot
+cat <<'HOSTS_SCRIPT' > /usr/local/bin/update-ceos-hosts.sh
+#!/bin/bash
+# Remove any existing ceos entries to avoid duplicates
+sed -i '/[[:space:]]ceos[123]$/d' /etc/hosts
 
-## Build local host etc/hosts
-echo "$var1" ceos1 >> /etc/hosts
-echo "$var2" ceos2 >> /etc/hosts
-echo "$var3" ceos3 >> /etc/hosts
-#echo "$var4" mattermost >> /etc/hosts
+# Wait for each container to be running before inspecting
+for name in ceos1 ceos2 ceos3; do
+    timeout 120 bash -c "until podman inspect ${name} --format '{{.State.Running}}' 2>/dev/null | grep -q true; do sleep 2; done"
+done
+
+# Write fresh management IPs
+for name in ceos1 ceos2 ceos3; do
+    ip=$(podman inspect ${name} | jq -r '.[] | .NetworkSettings.Networks.management | .IPAddress')
+    echo "${ip} ${name}" >> /etc/hosts
+done
+HOSTS_SCRIPT
+chmod +x /usr/local/bin/update-ceos-hosts.sh
+
+## Create systemd service to run the script at boot after podman starts
+cat <<'UNIT' > /etc/systemd/system/update-ceos-hosts.service
+[Unit]
+Description=Refresh ceos container IPs in /etc/hosts
+After=network-online.target ceos-containers.service
+Wants=network-online.target
+Requires=ceos-containers.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/update-ceos-hosts.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+systemctl enable update-ceos-hosts.service
+
+## Create a startup script that starts ceos containers and waits for SSH to be ready
+cat <<'CEOS_SCRIPT' > /usr/local/bin/start-ceos-containers.sh
+#!/bin/bash
+# Start each ceos container
+for name in ceos1 ceos2 ceos3; do
+    podman start $name || echo "WARNING: failed to start $name"
+done
+
+# Wait for SSH to be available on each container's mapped port before exiting.
+# This ensures AAP jobs don't try to connect before EOS has fully booted.
+declare -A ports=([ceos1]=2001 [ceos2]=2002 [ceos3]=2003)
+for name in ceos1 ceos2 ceos3; do
+    port=${ports[$name]}
+    echo "Waiting for SSH on $name (port $port)..."
+    timeout 300 bash -c "until bash -c 'echo > /dev/tcp/localhost/$port' 2>/dev/null; do sleep 5; done"
+    echo "$name is ready"
+done
+CEOS_SCRIPT
+chmod +x /usr/local/bin/start-ceos-containers.sh
+
+## Create a dedicated systemd service to restart the ceos containers on boot
+cat <<'EOF' > /etc/systemd/system/ceos-containers.service
+[Unit]
+Description=Start ceos switch containers
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/start-ceos-containers.sh
+ExecStop=/usr/bin/podman stop ceos1 ceos2 ceos3
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable ceos-containers
+
+## Get management IP (initial population for this first run)
+/usr/local/bin/update-ceos-hosts.sh
 
 
 
 ## Install Gmnic
 bash -c "$(curl -sL https://get-gnmic.kmrd.dev)"
-
-## Test GMNIC
-## gnmic -a localhost:6031 -u ansible -p ansible --insecure subscribe --path   "/interfaces/interface[name=Ethernet1]/state/admin-status"
-## gnmic -addr ceos1:6031 -username ansible -password ansible   get '/network-instances/network-instance[name=default]/protocols/protocol[identifier=BGP][name=BGP]/bgp'
-## gnmic -a localhost:6031 -u ansible -p ansible --insecure subscribe --path 'components/component/state/memory/'
-
-# ## SSH Setup
-# echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDdQebku7hz6otXEso48S0yjY0mQ5oa3VbFfOvEHeApfu9pNMG34OCzNpRadCDIYEfidyCXZqC91vuVM+6R7ULa/pZcgoeDopYA2wWSZEBIlF9DexAU4NEG4Zc0sHfrbK66lyVgdpvu1wmHT5MEhaCWQclo4B5ixuUVcSjfiM8Y7FL/qOp2FY8QcN10eExQo1CrGBHCwvATxdjgB+7yFhjVYVkYALINDoqbFaituKupqQyCj3FIoKctHG9tsaH/hBnhzRrLWUfuUTMMveDY24PzG5NR3rBFYI3DvKk5+nkpTcnLLD2cze6NIlKW5KygKQ4rO0tJTDOqoGvK5J5EM4Jb" >> /root/.ssh/authorized_keys 
-# echo "Host *" >> /etc/ssh/ssh_config
-# echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config
-# echo "UserKnownHostsFile=/dev/null" >> /etc/ssh/ssh_config
-# chmod 400 /etc/ssh/ssh_config
-# systemctl restart sshd
 
 #################################################################
 
@@ -217,7 +257,7 @@ cat <<EOF | tee /etc/telegraf/telegraf.conf
 
 EOF
 
-systemctl start telegraf
+systemctl enable --now telegraf
 
 sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
@@ -235,7 +275,7 @@ EOF
 
 sudo yum install filebeat -y
 
-cat <<EOF | tee  /etc/filebeat/filebeat.yml 
+cat <<EOF | tee  /etc/filebeat/filebeat.yml
 
 filebeat.inputs:
 - type: journald
@@ -254,8 +294,7 @@ EOF
 
 sleep 30
 
-#systemctl enable filebeat
-systemctl start filebeat
+systemctl enable --now filebeat
 
 yum install httpd -y
 yum install rsync -y
@@ -263,8 +302,7 @@ yum install rsync -y
 git clone https://github.com/nmartins0611/aap25-roadshow-content.git /tmp/lab-setup
 sudo rsync -av /tmp/lab-setup/lab-resources/* /var/www/html/
 
-systemctl start httpd
+systemctl enable --now httpd
 
 mkdir /var/www/html/chaos
 chmod 777 /var/www/html/chaos
-
