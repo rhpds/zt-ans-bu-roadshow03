@@ -1,183 +1,142 @@
-= Lab Guide: Proactive Network Operations with EDA
+= Lab Guide: Integrating AAP with Red Hat Insights
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
-_A guide to using Event-Driven Ansible to move beyond simple remediation and proactively gather information and automate mundane network tasks._
+_A guide to using Ansible Automation Platform to connect to Red Hat Insights, remediate vulnerabilities, and report on CVEs._
 
 ---
 
-== Scenario: Proactive Network Operations
+== Scenario: Operational Efficiency
 
-Delivering video across the globe is complex, and network problems can arise. While remediating issues automatically is powerful, it's not always the best first step for network problems. Instead, a consistent, automated troubleshooting process can gather crucial data for network engineers to resolve issues quickly.
+Vulnerability and compliance management can be tedious, especially at scale. In this lab, you will integrate Ansible Automation Platform with Red Hat Insights to streamline this process.
 
----
-
-== Information Gathering with Event-Driven Ansible
-
-Your network engineers have created playbooks to assist with troubleshooting. You will now configure a rulebook to automatically run these playbooks when a network event occurs.
-
-. **Create the "Network Event" Rulebook Activation.**
-+
-Navigate to your `aap` tab. Go to **Automation Decisions** → **Rulebook Activations**. Click **Create rulebook activation** and configure it with the following details:
-+
-* **Name:** `Network Event`
-* **Organization:** `Default`
-* **Description:** `Rulebook to listen to Network Telemetry`
-* **Project:** `Roadshow`
-* **Rulebook:** `network_stats.yml`
-* **Decision environment:** `Network Telemetry`
-* **Credential:** `AAP`
-* **Restart Policy:** `On failure`
-+
-Click **Create rulebook activation**. Once running, this rulebook will listen for multiple network conditions.
-
-. **Simulate a network failure.**
-+
-Navigate to the `S.E.A.N` tab. Select option **3** to have the simulator make a change to the network that affects the BGP configuration.
-
-. **Observe the automated response.**
-+
-The Event-Driven Ansible controller will receive an event from the network telemetry. Navigate to the `aap` tab and go to **Automation Execution** → **Jobs**. You will see two jobs: one triggered by S.E.A.N's API call, and a second, **Network Troubleshooting**, which was triggered automatically by the event.
-+
-image::network-troubleshooting.png[Network Troubleshooting job triggered by an event, opts="border"]
-
-. **Examine the Rule Audit.**
-+
-In the `aap` tab, navigate to **Automation Decisions** → **Rule Audit**. You will see a "BGP change detected" event. Click on it to see the event payload and the action that was taken.
-+
-image::rule-audit.png[Rule Audit showing the BGP change event, opts="border"]
-
-. **Review the troubleshooting output and ServiceNow ticket.**
-+
-Go to **Automation Execution** → **Jobs** and look at the output from the **Network Troubleshooting** job. The playbook backed up switch configurations, checked BGP status, verified reachability, and logged all this information in a ServiceNow ticket. Note the incident number from the job output.
-+
-image:logged.png[Job output showing the new incident number, opts="border"]
-+
-To view the ticket, navigate to the `ServiceNow` tab and log in.
-+
-.ServiceNow Credentials
+.Credentials
 [cols="1,1", options="header"]
 |===
-| Username | Password
-| `aap-roadshow` | `Ans1ble123!`
+| Ansible Automation Platform | ServiceNow
+| `admin` / `ansible123!` | `aap-roadshow` / `Ans1ble123!
 |===
-+
-Click on **All** → **Incidents**. Find your ticket in the list to see a full report ready for the networking team.
-+
-image::incidents.png[Incidents list in ServiceNow, opts="border"]
-+
-image::the-ticket.png[Detailed incident ticket with troubleshooting data, opts="border"]
+
+NOTE: An active Red Hat account (such as a Developer account from the pre-work) is required to access Red Hat Insights.
 
 ---
 
-== Automating Mundane Tasks: Proactive Port Configuration
+== Remediating Vulnerabilities with Insights and AAP
 
-Event-Driven Ansible can also automate routine tasks, like configuring a network port when a new server is physically connected in a remote data center.
+Your first task is to connect a RHEL server to Red Hat Insights and then use an Insights-generated playbook to remediate a CVE.
 
-. **Define the Source of Truth.**
+. **Update the Insights credential in AAP.**
 +
-You can define a "source of truth" configuration that should be applied whenever a port becomes active.
+Navigate to **Automation Execution** → **Infrastructure** → **Credentials**. Find and edit the credential named `Insights`. **Update this credential with your personal Red Hat account username and password.**
 +
-[source,yaml]
-----
-my_sot:
-  - name: Ethernet1
-    mode: access
-    access:
-      vlan: 30
-----
+image::insights-creds.png[Insights credential configuration page, opts="border"]
 
-. **Check the current port configuration.**
+. **Synchronize the Insights project.**
 +
-In the `aap` tab, navigate to **Automation Execution** → **Templates** and launch the **Show port config** job template. This will show the current, unconfigured state of a port on the remote network switch.
+Once the credential is saved, navigate to **Automation Execution** → **Projects** and click the sync icon for the **Insights** project. The project should now synchronize successfully.
 +
-NOTE: This template may be on the second page of the templates list.
-+
-image::current-port.png[Current (default) port configuration, opts="border"]
+image::insights-sync.png[Synchronizing the Insights project, opts="border"]
 
-. **Simulate plugging in a new server.**
+. **Register a server with Red Hat Insights.**
 +
-Navigate to the `S.E.A.N` tab and select option **4**. This simulates an operator plugging a new server into a switch port.
+Navigate to **Automation Execution** → **Templates** and launch the **Insights for RHEL** job template. When prompted by the survey, enter your Red Hat account credentials again.
++
+image::insight-login.png[Entering Red Hat credentials in the survey, opts="border"]
++
+This template will register the server with Red Hat Subscription Manager, install the Insights client, and perform the initial system scan and upload.
 
-. **Observe the event and pending approval.**
+. **Create a remediation playbook in Insights.**
 +
-The running network rulebook will detect the "port up" event. In the `aap` tab, go to **Automation Decisions** → **Rulebook Activations** and notice the **Fire Count** has increased.
+Once the job completes, navigate to the `console.redhat.com` tab in your lab environment and log in. Go to **Red Hat Insights**.
 +
-image::firecount.png[Increased fire count indicating a new event, opts="border"]
+image::insights4rhel.png[Red Hat Insights dashboard, opts="border"]
 +
-Now, go to **Automation Execution** → **Jobs**. A new workflow has been triggered, but it is paused with a **Pending** status, waiting for approval.
+From the left menu, navigate to **Content** → **Advisories**. This page lists all applicable CVEs for your registered node. Select an advisory (e.g., `RHSA-2024:10274`) and click the **Remediate** button.
 +
-image::job_approval.png[Job waiting for approval, opts="border"]
+image::rhsa-2024-10274.png[Details for a specific advisory, opts="border"]
++
+Name the new remediation playbook `cve-rhsa-2024-10274` and proceed through the review steps to create it.
++
+image::review.png[Reviewing systems for remediation, opts="border"]
 
-. **Approve the workflow.**
+. **Create and launch the remediation job in AAP.**
 +
-Click on the pending approval step in the job list.
+Return to the `aap` tab. Go to **Automation Execution** → **Projects** and sync the **Insights** project again. This will pull the new remediation playbook you just created.
 +
-image::approve_wk.png[Workflow approval prompt, opts="border"]
+Now, go to **Automation Execution** → **Templates** and create a new job template with the following details:
 +
-Click the **Approve** button to allow the workflow to configure the port.
+* **Name:** `CVE-2024-1074`
+* **Project:** `Insights`
+* **Inventory:** `Video Platform Inventory`
+* **Playbook:** Select the `cve-rhsa-2024-10274...` playbook.
+* **Execution Environment:** `RHEL EE`
+* **Credentials:** `Application Nodes`
++
+Save the template and **launch it**.
 
-. **Verify the new port configuration.**
+. **Verify the remediation.**
 +
-Once the workflow completes, click on the **New Port Configuration** job step. The output will show the new, compliant configuration that has been applied to the activated port. You've just configured a switch port without ever touching a command line!
-+
-image::new-port.png[Output showing the new port configuration, opts="border"]
+Once the job completes successfully, return to the `console.redhat.com` tab. Navigate to **Automation Toolkit** → **Remediations**. You should see that the status of your remediation plan is now complete.
 
 ---
 
-== Appendix: Troubleshooting Code Snippets
+== Gathering CVE Data with the Insights API
 
-If you're interested, here is the key code snippet from the network troubleshooting playbook.
+Red Hat Insights provides a vast API that you can use to gather data and build self-healing infrastructure. In this task, you will use the API to gather data for your security team.
+
+. **Choose a CVE Advisory ID.**
++
+From the `console.redhat.com` tab, navigate back to **Content** → **Advisories** and copy an Advisory ID (e.g., `RHSA-2024:9474`).
+
+. **Launch the "CVE Advisory" job template.**
++
+Return to the `aap` tab. Navigate to **Automation Execution** → **Templates** and launch the **CVE Advisory** job template. When prompted by the survey, enter your Red Hat credentials and the Advisory ID you just copied.
++
+image::cve-finder.png[Entering credentials and an Advisory ID in the survey, opts="border"]
+
+. **Review the ServiceNow incident.**
++
+This job is configured to connect to Insights, gather all relevant data about the specified CVE, and automatically open an incident in ServiceNow. Once the job completes, take note of the incident number in the output.
++
+Navigate to the `servicenow` tab in your lab environment and log in. Click on **All**, then **Incidents**. Find the new ticket (titled "Advisory CVE Type") and open it to view all the data gathered from the Insights API.
++
+image::cve-data.png[ServiceNow ticket with CVE data from Insights, opts="border"]
++
+Your security team now has all the relevant data about the CVE and can proceed with remediation.
+
+---
+
+== Appendix: Code Snippets
+
+If you're interested, here are some key code snippets from the Insights registration playbook.
 
 [source,yaml]
 ----
 tasks:
-- name: Backup arista configuration
-  arista.eos.eos_config:
-    backup: true
-    backup_options:
-      dir_path: /tmp/
-      filename: "{{ inventory_hostname }}.txt"
-  register: config_output
+- name: Install subscription manager
+  ansible.builtin.package:
+    name: subscription-manager
+    state: present
 
-- name: BGP Check
-  arista.eos.eos_command:
-    commands: show ip bgp summary vrf all
-  register: bgp_summary
+- name: Install insights client
+  ansible.builtin.package:
+    name: insights-client
+    state: present
 
-- name: Check reachability of switches
-  arista.eos.eos_command:
-    commands: "{{ switches }}"
-  register: result
+- name: Register RHEL server with subscription manager
+  community.general.redhat_subscription:
+    state: present
+    username: "{{ rhsm_username }}"
+    password: "{{ rhsm_password }}"
+    auto_attach: true
 
-- name: Create incident
-  servicenow.itsm.incident:
-    instance:
-      host: "{{ SN_HOST }}"
-      username: "{{ SN_USERNAME }}"
-      password: "{{ SN_PASSWORD }}"
-    state: new
-    caller: "{{ SN_USERNAME }}"
-    short_description: "Network Issue detected, Troubleshooting report"
-    description: |
-      Network Issue:
-      Backups Available on each switch @: "{{ config_output }}"
-      {{ formatted_bgp_summary }}
-      {{ formatted_switch_result }}
-    impact: high
-    urgency: high
-  delegate_to: localhost
-  register: new_incident
-  run_once: true
+- name: Register insights client
+  ansible.builtin.command: insights-client --register
 
-- debug:
-    msg: "A new incident has been created: {{ new_incident.record.number }}"
-  delegate_to: localhost
-  run_once: true
+- name: Perform initial Insights upload
+  ansible.builtin.command: >
+    /bin/insights-client
+  register: __insights_scan
+  changed_when: __insights_scan.rc == 0
 ----
-
-== Troubleshooting
-
-If you have encountered an issue or have noticed something not quite right, please link:https://github.com/ansible/workshops/issues/new?labels=controller-101&title=Issue+with+Roadshow03&assignees=nmartins0611[open an issue on GitHub].

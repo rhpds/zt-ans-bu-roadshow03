@@ -1,7 +1,6 @@
 = Lab Guide: Operational Efficiency with Event-Driven Ansible
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
 _A guide to using the advanced features of Ansible Automation Platform, like Event-Driven Ansible, to reduce resolution time and prevent outages._
@@ -93,8 +92,7 @@ Simulating the failure was useful, but now let's prevent it from causing downtim
 . **Navigate to Rulebook Activations.**
 +
 In your `aap` tab, go to **Automation Decisions** → **Rulebook Activations**. This is where you can configure Event-Driven Ansible to listen for specific events and trigger automated responses.
-+
-image::rules.png[Rulebook Activations page, opts="border"]
+
 
 . **Create a new rulebook activation.**
 +
@@ -102,11 +100,13 @@ Click **Create rulebook activation** and configure it with the following details
 +
 * **Name:** `Web-App Event`
 * **Description:** `Rulebook to listen to configuration issues`
+* **Organization:** `Default`
 * **Project:** `Roadshow`
 * **Rulebook:** `Webapp.yml`
-* **Decision environment:** `Web Server`
 * **Credential:** `AAP`
+* **Decision environment:** `Web Server`
 * **Restart Policy:** `On failure`
+* **Log Level:** `Error`
 +
 Click **Create rulebook activation**.
 
