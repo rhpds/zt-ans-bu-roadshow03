@@ -190,13 +190,9 @@ enabled = 1
 gpgcheck = 1
 gpgkey = https://repos.influxdata.com/influxdata-archive.key
 
-# EOF
+EOF
 
-# dnf install telegraf -y
-
-wget https://dl.influxdata.com/telegraf/releases/telegraf-1.36.2-1.x86_64.rpm
-sudo yum localinstall telegraf-1.36.2-1.x86_64.rpm -y
-
+dnf install telegraf -y
 
 cat <<EOF | tee /etc/telegraf/telegraf.conf
 
