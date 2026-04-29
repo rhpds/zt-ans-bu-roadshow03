@@ -37,11 +37,11 @@ ansible-galaxy collection install community.general
 
 mkdir /opt/ceos-setup/
 
-git clone https://github.com/nmartins0611/Instruqt_netops.git /opt/ceos-setup/
+git clone https://github.com/rhpds/summit-2026-nmartins0611-instruqt-netops.git /opt/ceos-setup/
 
 ### Configure containers
 
-podman pull quay.io/nmartins/ceoslab-rh
+podman pull quay.io/rhpds/summit-2026-nmartins-ceoslab-rh:summit-2026
 
 ## Create Networks
 
@@ -51,9 +51,9 @@ podman network create net3
 podman network create loop
 podman network create management
 
-podman run -d --network management --memory=4g --name=ceos1 --privileged -v /opt/ceos-setup/sw01/sw01:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6031:6030 -p 2001:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##
-podman run -d --network management --memory=4g --name=ceos2 --privileged -v /opt/ceos-setup/sw02/sw02:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6032:6030 -p 2002:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
-podman run -d --network management --memory=4g --name=ceos3 --privileged -v /opt/ceos-setup/sw03/sw03:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6033:6030 -p 2003:22/tcp quay.io/nmartins/ceoslab-rh /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
+podman run -d --network management --memory=4g --name=ceos1 --privileged -v /opt/ceos-setup/sw01/sw01:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6031:6030 -p 2001:22/tcp quay.io/rhpds/summit-2026-nmartins-ceoslab-rh:summit-2026 /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##
+podman run -d --network management --memory=4g --name=ceos2 --privileged -v /opt/ceos-setup/sw02/sw02:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6032:6030 -p 2002:22/tcp quay.io/rhpds/summit-2026-nmartins-ceoslab-rh:summit-2026 /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
+podman run -d --network management --memory=4g --name=ceos3 --privileged -v /opt/ceos-setup/sw03/sw03:/mnt/flash/startup-config -e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman -p 6033:6030 -p 2003:22/tcp quay.io/rhpds/summit-2026-nmartins-ceoslab-rh:summit-2026 /sbin/init systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman  ##systemd.setenv=MGMT_INTF=eth0
 
 
 # ## Attach Networks
@@ -113,7 +113,7 @@ systemctl enable update-ceos-hosts.service
 ## Create a startup script that recreates ceos containers with proper port forwarding
 cat <<'CEOS_SCRIPT' > /usr/local/bin/start-ceos-containers.sh
 #!/bin/bash
-IMAGE="quay.io/nmartins/ceoslab-rh"
+IMAGE="quay.io/rhpds/summit-2026-nmartins-ceoslab-rh:summit-2026"
 COMMON_ENV="-e INTFTYPE=eth -e ETBA=1 -e SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 -e CEOS=1 -e EOS_PLATFORM=ceoslab -e container=podman"
 COMMON_SYSENV="systemd.setenv=INTFTYPE=eth systemd.setenv=ETBA=1 systemd.setenv=SKIP_ZEROTOUCH_BARRIER_IN_SYSDBINIT=1 systemd.setenv=CEOS=1 systemd.setenv=EOS_PLATFORM=ceoslab systemd.setenv=container=podman"
 
@@ -321,7 +321,7 @@ systemctl enable --now filebeat
 yum install httpd -y
 yum install rsync -y
 
-git clone https://github.com/nmartins0611/aap25-roadshow-content.git /tmp/lab-setup
+git clone https://github.com/rhpds/summit-2026-nmartins0611-aap25-roadshow-content.git /tmp/lab-setup
 sudo rsync -av /tmp/lab-setup/lab-resources/* /var/www/html/
 
 systemctl enable --now httpd

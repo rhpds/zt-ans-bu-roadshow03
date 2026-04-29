@@ -167,7 +167,7 @@ tee /tmp/setup.yml << EOF
   - name: Add Network EE
     ansible.controller.execution_environment:
       name: "Edge_Network_ee"
-      image: quay.io/acme_corp/network-ee
+      image: quay.io/rhpds/summit-2026-acme-corp-network-ee:summit-2026
       controller_host: "https://localhost"
       controller_username: admin
       controller_password: ansible123!
@@ -176,7 +176,7 @@ tee /tmp/setup.yml << EOF
   - name: Add Windows EE
     ansible.controller.execution_environment:
       name: "Windows_ee"
-      image: quay.io/acme_corp/windows-ee
+      image: quay.io/rhpds/summit-2026-acme-corp-windows-ee:summit-2026
       controller_host: "https://localhost"
       controller_username: admin
       controller_password: ansible123!
@@ -185,7 +185,7 @@ tee /tmp/setup.yml << EOF
   - name: Add EE to the controller instance
     ansible.controller.execution_environment:
       name: "ServiceNow EE"
-      image: quay.io/acme_corp/servicenow-ee:latest
+      image: quay.io/rhpds/summit-2026-acme-corp-servicenow-ee:summit-2026
       controller_host: "https://localhost"
       controller_username: admin
       controller_password: ansible123!
@@ -194,7 +194,7 @@ tee /tmp/setup.yml << EOF
   - name: Add EE to the controller instance
     ansible.controller.execution_environment:
       name: "RHEL EE"
-      image: quay.io/acme_corp/rhel_90_ee:latest
+      image: quay.io/rhpds/summit-2026-acme-corp-rhel-90-ee:summit-2026
       controller_host: "https://localhost"
       controller_username: admin
       controller_password: ansible123!
@@ -412,8 +412,8 @@ tee /tmp/setup.yml << EOF
       description: "Roadshow Content"
       organization: "Default"
       scm_type: git
-      scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git 
-  ##http://gitea:3000/student/aap25-roadshow-content.git ##https://github.com/nmartins0611/aap25-roadshow-content.git
+      scm_url: https://github.com/rhpds/summit-2026-nmartins0611-aap25-roadshow-content.git 
+  ##http://gitea:3000/student/aap25-roadshow-content.git ##https://github.com/rhpds/summit-2026-nmartins0611-aap25-roadshow-content.git
       state: present
       controller_host: "https://localhost"
       controller_username: admin
@@ -766,7 +766,7 @@ tee /tmp/setup.yml << EOF
     ansible.eda.decision_environment:
       name: "Network Telemetry"
       description: "Network/Kafka"
-      image_url: "quay.io/nmartins/network_de"
+      image_url: "quay.io/rhpds/summit-2026-nmartins-network-de:summit-2026"
    #   credential: "Example Credential"
       organization_name: Default
       state: present
@@ -779,7 +779,7 @@ tee /tmp/setup.yml << EOF
     ansible.eda.decision_environment:
       name: "Web Server"
       description: "Webserver/Kafka"
-      image_url: "quay.io/nmartins/network_de"
+      image_url: "quay.io/rhpds/summit-2026-nmartins-network-de:summit-2026"
    #   credential: "Example Credential"
       organization_name: Default
       state: present
@@ -792,7 +792,7 @@ tee /tmp/setup.yml << EOF
     ansible.eda.project:
       name: "Roadshow"
       description: "Roadshow Rulebooks"
-      url: https://github.com/ansible-tmm/aap25-roadshow.git
+      url: https://github.com/rhpds/summit-2026-ansible-tmm-aap25-roadshow.git
       organization_name: Default
       state: present
       controller_host: https://localhost
@@ -807,7 +807,7 @@ tee /tmp/setup.yml << EOF
   #     description: "Red Hat Insights"
   #     organization: "Default"
   #     scm_type: insights
-  #     scm_url: https://github.com/nmartins0611/aap25-roadshow-content.git
+  #     scm_url: https://github.com/rhpds/summit-2026-nmartins0611-aap25-roadshow-content.git
   #     credential: Insights
   #     state: present
   #     controller_host: "https://localhost"
@@ -824,7 +824,7 @@ sudo chown rhel:rhel /tmp/inventory
 sleep 20
 
 
-git clone -b aap-2.6 https://github.com/ansible-tmm/aap25-roadshow.git /home/rhel/roadshow
+git clone -b aap-2.6 https://github.com/rhpds/summit-2026-ansible-tmm-aap25-roadshow.git /home/rhel/roadshow
 
 chmod -R 777 /home/rhel/roadshow
 chmod +x /home/rhel/roadshow/lab-resources/hackbot.sh
