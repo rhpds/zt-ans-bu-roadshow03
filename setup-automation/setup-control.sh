@@ -824,7 +824,7 @@ sudo chown rhel:rhel /tmp/inventory
 sleep 20
 
 
-git clone -b aap-2.6 https://github.com/rhpds/summit-2026-ansible-tmm-aap25-roadshow.git /home/rhel/roadshow
+git clone https://github.com/rhpds/summit-2026-ansible-tmm-aap25-roadshow.git /home/rhel/roadshow
 
 chmod -R 777 /home/rhel/roadshow
 chmod +x /home/rhel/roadshow/lab-resources/hackbot.sh
