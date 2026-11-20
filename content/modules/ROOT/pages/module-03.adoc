@@ -107,9 +107,11 @@ The running network rulebook will detect the "port up" event. In the `aap` tab, 
 +
 image::firecount.png[Increased fire count indicating a new event, opts="border"]
 +
-Now, go to **Automation Execution** → **Jobs**. A new workflow has been triggered, but it is paused with a **Pending** status, waiting for approval.
+Now, go to **Automation Execution** → **Jobs**. You'll see the **New Device Active** workflow was triggered from the port coming online. Select that job and notice it is waiting for an approval step to complete before activating the port.
 +
 image::job_approval.png[Job waiting for approval, opts="border"]
++
+image::new_device_approval.png[Job waiting for approval, opts="border"]
 
 . **Approve the workflow.**
 +
