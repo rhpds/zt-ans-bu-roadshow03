@@ -210,7 +210,12 @@ image::firecount.png[Rulebook Fire Count Update]
 ### **Step 10: Approve Workflow**
 
 1. **Navigate to Automation Execution → Jobs**
-2. **You'll see a workflow triggered** from the port coming online with an approval pending
+2. **You'll see the New Device Active workflow triggered** from the port coming online.
+3. Select the job and notice it is waiting for an approval step to complete before activating the port.
+4. Click the **new_device_approval** step.
+
+[role="border"]
+image::new_device_approval.png[Workflow Approval Step]
 
 [role="border"]
 image::job_approval.png[Job Approval Required]
