@@ -1,15 +1,3 @@
-* xref:module-01.adoc[1. Automated Backups]
-** xref:module-01.adoc#backupLinux[Backing up Linux]
-** xref:module-01.adoc#backupWindows[Windows VSS]
-** xref:module-01.adoc#codeSnippets[Code Snippets]
-
-* xref:module-02.adoc[2. Infrastructure Awareness]
-** xref:module-02.adoc#atscale[System Reports]
-** xref:module-02.adoc#compliance[Compliance Reporting]
-** xref:module-02.adoc#codeSnippets[Code Snippets]
-
-* xref:module-03.adoc[3. Windows Reports]
-** xref:module-03.adoc#lastCheck[Check Schedule]
-** xref:module-03.adoc#codeSnippets[Code Snippets]
-
-
+* xref:module-01.adoc[1. The day the application died]
+// module-02 disabled — Lightspeed remediation requires RHC + elevated RBAC
+* xref:module-03.adoc[2. Oh no whats next, the network?]

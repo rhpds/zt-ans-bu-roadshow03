@@ -26,6 +26,3 @@ tabs:
   - name: ServiceNow
     url: https://ansible.service-now.com
     external: true
-  # - name: Red Hat Insights
-  #   url: https://console.redhat.com
-  #   external: true
