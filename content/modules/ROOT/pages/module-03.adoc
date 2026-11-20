@@ -117,9 +117,9 @@ Click on the pending approval step in the job list.
 +
 image::new_device_approval.png[Job waiting for approval, opts="border"]
 +
-image::approve_wk.png[Workflow approval prompt, opts="border"]
-+
 Click the **Approve** button to allow the workflow to configure the port.
++
+image::approve_wk.png[Workflow approval prompt, opts="border"]
 
 . **Verify the new port configuration.**
 +
