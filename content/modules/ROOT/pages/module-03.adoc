@@ -110,12 +110,12 @@ image::firecount.png[Increased fire count indicating a new event, opts="border"]
 Now, go to **Automation Execution** → **Jobs**. You'll see the **New Device Active** workflow was triggered from the port coming online. Select that job and notice it is waiting for an approval step to complete before activating the port.
 +
 image::job_approval.png[Job waiting for approval, opts="border"]
-+
-image::new_device_approval.png[Job waiting for approval, opts="border"]
 
 . **Approve the workflow.**
 +
 Click on the pending approval step in the job list.
++
+image::new_device_approval.png[Job waiting for approval, opts="border"]
 +
 image::approve_wk.png[Workflow approval prompt, opts="border"]
 +
